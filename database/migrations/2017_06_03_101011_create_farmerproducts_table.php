@@ -40,6 +40,6 @@ class CreateFarmerproductsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('farmerproducts');
     }
 }
