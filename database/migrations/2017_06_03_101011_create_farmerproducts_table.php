@@ -20,11 +20,8 @@ class CreateFarmerproductsTable extends Migration
             $table->foreign('user_id')
                     ->references('id')
                     ->on('users');
-            $table->integer('product_id')
-                    ->unsigned();
-            $table->foreign('product_id')
-                    ->references('id')
-                    ->on('products');
+            $table->string('product_name');
+            $table->string('product_desc');
             $table->decimal('price_per_unit', 6, 3);
             $table->integer('stocks_available')
                     ->unsigned();
