@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'firstname', 'middlename', 
+        'username', 'email', 'password', 'firstname', 'middlename', 
         'lastname', 'address', 'business_name', 'mobile_no',
         'years_in_business', 'photo_url', 'is_farmer', 'history',
         'years_in_farming',
@@ -34,6 +34,11 @@ class User extends Authenticatable
     /**
     * Order that belongs to User
     **/
+
+    public function findForPassport($username) {
+       return self::where('username', $username)->first();
+    }
+
     public function Order()
     {
         return $this->hasMany('App\Order');
