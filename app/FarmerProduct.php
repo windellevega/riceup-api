@@ -24,4 +24,12 @@ class FarmerProduct extends Model
     {
         return $this->hasMany('App\ProductOrder');
     }
+
+    /**
+    * FarmerProduct that belongs to User
+    **/
+    public function User()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

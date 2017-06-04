@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\FarmerProduct;
+use App\User;
+
 class FarmerProductController extends Controller
 {
     /**
@@ -11,9 +14,20 @@ class FarmerProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id='all')
     {
-        //
+        if($id == 'all') {
+            $products = FarmerProduct::all();
+            $products->load('User');
+        }
+        else {
+            $products = FarmerProduct::where('user_id', $id)
+                            ->get();
+            $product->load('User');
+        }
+        
+        
+        return response()->json($products);
     }
 
     /**

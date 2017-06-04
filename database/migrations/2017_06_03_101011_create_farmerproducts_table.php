@@ -13,7 +13,7 @@ class CreateFarmerproductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('farmerproducts', function (Blueprint $table) {
+        Schema::create('farmer_products', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')
                     ->unsigned();
@@ -22,7 +22,7 @@ class CreateFarmerproductsTable extends Migration
                     ->on('users');
             $table->string('product_name');
             $table->string('product_desc');
-            $table->decimal('price_per_unit', 6, 3);
+            $table->decimal('price_per_unit', 8, 2);
             $table->integer('stocks_available')
                     ->unsigned();
             $table->date('date_of_harvest');
@@ -37,6 +37,6 @@ class CreateFarmerproductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('farmerproducts');
+        Schema::dropIfExists('farmer_products');
     }
 }

@@ -38,4 +38,12 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Order');
     }
+
+    /**
+    * FarmerProduct that belongs to User
+    **/
+    public function FarmerProduct()
+    {
+        return $this->hasMany('App\FarmerProduct');
+    }
 }

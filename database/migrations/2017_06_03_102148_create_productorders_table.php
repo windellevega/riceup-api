@@ -13,7 +13,7 @@ class CreateProductordersTable extends Migration
      */
     public function up()
     {
-        Schema::create('productorders', function (Blueprint $table) {
+        Schema::create('product_orders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')
                     ->unsigned();
@@ -23,7 +23,7 @@ class CreateProductordersTable extends Migration
             $table->integer('fp_id')->unsigned();
             $table->foreign('fp_id')
                     ->references('id')
-                    ->on('farmerproducts');
+                    ->on('farmer_products');
             $table->integer('quantity')
                     ->unsigned();
             $table->timestamps();
@@ -37,6 +37,6 @@ class CreateProductordersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('productorders');
+        Schema::dropIfExists('product_orders');
     }
 }

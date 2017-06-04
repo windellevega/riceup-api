@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\User;
+
 class UserController extends Controller
 {
     /**
@@ -11,9 +13,28 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($type='all')
     {
-        //
+        // TODO: Add number of products to the response
+        
+        if($type == 'all') {
+            $users = User::all();
+        }
+        else if($type == 'farmer') {
+            $users = User::where('is_farmer', 1)
+                        ->get();
+        }
+        else if($type == 'consumer') {
+            $users = User::where('is_farmer', 0)
+                        ->get();
+        }
+        else {
+            return response()->json([
+                'message' => 'Invalid user type!'
+            ]);
+        }
+
+        return response()->json($users);
     }
 
     /**
@@ -45,7 +66,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::where('id', $id)
+                        ->get();
+        return response()->json($user);
     }
 
     /**
