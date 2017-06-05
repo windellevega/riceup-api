@@ -39,6 +39,12 @@ class User extends Authenticatable
        return self::where('username', $username)->first();
     }
 
+    public function productsCount() {
+        return $this->hasOne('App\FarmerProduct')
+                ->selectRaw('user_id, count(*) as products')
+                ->groupBy('user_id');
+    }
+
     public function Order()
     {
         return $this->hasMany('App\Order');

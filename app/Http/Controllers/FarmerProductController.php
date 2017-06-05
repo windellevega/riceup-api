@@ -59,7 +59,9 @@ class FarmerProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = FarmerProduct::where('id', $id)
+                        ->get();
+        return response()->json($product);
     }
 
     /**

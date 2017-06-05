@@ -17,16 +17,22 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/products/{id?}', [
+Route::middleware('auth:api')->get('/products/{id?}', [
 	'as' => 'products-list', 
 	'uses' => 'FarmerProductController@index'
 ]);
 
-Route::get('/users/{type?}', [
+Route::middleware('auth:api')->get('/product/{id}', [
+	'as' => 'product-show',
+	'uses' => 'FarmerProductController@show'
+]);
+
+Route::middleware('auth:api')->get('/users/{type?}', [
 	'as' => 'users-list',
 	'uses' => 'UserController@index'
 ]);
 
-Route::get('/user/{id}', [
+Route::middleware('auth:api')->get('/user/{id}', [
+	'as' => 'user-show',
 	'uses' => 'UserController@show'
 ]);

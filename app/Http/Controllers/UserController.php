@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\User;
+use App\FarmerProduct;
 
 class UserController extends Controller
 {
@@ -21,8 +23,13 @@ class UserController extends Controller
             $users = User::all();
         }
         else if($type == 'farmer') {
-            $users = User::where('is_farmer', 1)
+            /*$users = User::where('is_farmer', 1)
                         ->get();
+            $users->count('FarmerProduct');*/
+            $users = User::with('productsCount')
+                        ->where('is_farmer', 1)
+                        ->get();
+            //$users->productsCount;
         }
         else if($type == 'consumer') {
             $users = User::where('is_farmer', 0)
