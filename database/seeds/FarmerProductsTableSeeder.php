@@ -15,6 +15,7 @@ class FarmerProductsTableSeeder extends Seeder
 	        [
 	        	'user_id' => 2,
 	        	'product_name' => 'Ang Tabako',
+	        	'photo_url' => '/photos/product/default.jpg',
 	        	'product_desc' => 'Tobacco that is good for making you slim af.',
 	        	'unit_type' => 'bundle',
 	        	'price_per_unit' => 500.50,
@@ -24,6 +25,7 @@ class FarmerProductsTableSeeder extends Seeder
 	        [
 	        	'user_id' => 2,
 	        	'product_name' => 'Jackie Rice',
+	        	'photo_url' => '/photos/product/default.jpg',
 	        	'product_desc' => 'Ang bigas na makinis pa sa GF mo',
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 3000,
@@ -33,6 +35,7 @@ class FarmerProductsTableSeeder extends Seeder
 	        [
 	        	'user_id' => 2,
 	        	'product_name' => 'White Corn',
+	        	'photo_url' => '/photos/product/default.jpg',
 	        	'product_desc' => 'They say it\'s white, I say it\'s fresh',
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 4200.25,
@@ -42,6 +45,7 @@ class FarmerProductsTableSeeder extends Seeder
 	        [
 	        	'user_id' => 3,
 	        	'product_name' => 'Rice and Shine',
+	        	'photo_url' => '/photos/product/default.jpg',
 	        	'product_desc' => 'Shiny af.',
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 3500.12,
@@ -51,6 +55,7 @@ class FarmerProductsTableSeeder extends Seeder
 	        [
 	        	'user_id' => 3,
 	        	'product_name' => 'Rice Rice Baby',
+	        	'photo_url' => '/photos/product/default.jpg',
 	        	'product_desc' => 'Rice that is good for your babies',
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 5100.25,
@@ -60,6 +65,7 @@ class FarmerProductsTableSeeder extends Seeder
 	        [
 	        	'user_id' => 3,
 	        	'product_name' => 'Mais White',
+	        	'photo_url' => '/photos/product/default.jpg',
 	        	'product_desc' => 'Mine is whiter than others.',
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 4300.25,

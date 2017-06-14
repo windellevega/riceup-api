@@ -27,6 +27,11 @@ Route::middleware('auth:api')->get('/product/{id}', [
 	'uses' => 'FarmerProductController@show'
 ]);
 
+Route::middleware('auth:api')->post('/product/add', [
+	'as' => 'product-add',
+	'uses' => 'FarmerProductController@store'
+]);
+
 Route::middleware('auth:api')->get('/users/{type?}', [
 	'as' => 'users-list',
 	'uses' => 'UserController@index'
