@@ -37,7 +37,17 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $order = Order();
+
+        $order->order_id = $request->oid;
+        $order->fp_id = Auth::id();
+        $order->quantity = $request->qty;
+
+        $order->save();
+
+        return response()->json([
+            'message' => 'Product added to your cart!'
+        ]);
     }
 
     /**

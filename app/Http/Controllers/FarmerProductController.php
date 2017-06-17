@@ -71,7 +71,7 @@ class FarmerProductController extends Controller
         $product->unit_type = $request->unit;
         $product->price_per_unit = $request->price;
         $product->stocks_available = $request->stocks;
-        $product->date_of_harvest = $request->harvest_date;
+        $product->date_of_harvest = $request->harvest_date;+
         $product->save();
 
         return response()->json([
