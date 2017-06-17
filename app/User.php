@@ -19,8 +19,16 @@ class User extends Authenticatable
         'username', 'email', 'password', 'firstname', 'middlename', 
         'lastname', 'address', 'business_name', 'mobile_no',
         'years_in_business', 'photo_url', 'is_farmer', 'history',
-        'years_in_farming',
+        'years_in_farming', 'address_lat', 'address_long', 'current_lat',
+        'current_long',
     ];
+
+    /**
+     * The attributes that are hidden.
+     *
+     * @var array
+     */
+    protected $hidden = ['password'];
 
     /**
      * The attributes that should be hidden for arrays.

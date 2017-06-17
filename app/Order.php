@@ -13,7 +13,7 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id', 'order_date', 'delivery_date',
-        'mode_of_shipping', 'order_status',
+        'mode_of_shipping', 'order_status', 'order_number',
     ];
 
     /**
@@ -30,5 +30,13 @@ class Order extends Model
     public function ProductOrder()
     {
         return $this->belongsTo('App\User');
+    }
+
+    /**
+    * Mutator for Order Number prepend RUORD
+    **/
+    public function setOrderNumberAttribute($value)
+    {
+        $this->attributes['order_number'] = strtolower('RUORD' . $value);
     }
 }

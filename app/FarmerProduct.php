@@ -14,7 +14,7 @@ class FarmerProduct extends Model
     protected $fillable = [
         'user_id', 'product_name', 'product_desc',
         'price_per_unit', 'stocks_available',
-        'date_of_harvest',
+        'date_of_harvest', 'unit_type', 'photo_url',
     ];
 
     /**

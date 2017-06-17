@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\FarmerProduct;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class FarmerProductController extends Controller
 {
@@ -63,7 +64,7 @@ class FarmerProductController extends Controller
 
         $product = new FarmerProduct();
 
-        $product->user_id = '2'; //@todo: replace with id of logged in user using $request->user()->id
+        $product->user_id = '2'; //@todo: replace with id of logged in user using Auth::id()
         $product->product_name = $request->name;
         $product->photo_url = (isset($request->photo_url) ? $request->photo_url : '/photos/product/default.jpg');
         $product->product_desc = $request->desc;
