@@ -41,3 +41,13 @@ Route::middleware('auth:api')->get('/user/{id}', [
 	'as' => 'user-show',
 	'uses' => 'UserController@show'
 ]);
+
+Route::middleware('auth:api')->post('/order/new', [
+	'as' => 'order-new',
+	'uses' => 'OrderController@store'
+]);
+
+Route::middleware('auth:api')->post('/cart/add', [
+	'as' => 'cart-add',
+	'uses' => 'ProductOrderController@store'
+]);

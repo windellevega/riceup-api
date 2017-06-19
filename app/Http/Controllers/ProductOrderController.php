@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\ProductOrder;
 
-use App\Order;
-use Illuminate\Support\Facades\Auth;
-
-class OrderController extends Controller
+class ProductOrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,27 +35,16 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $currorder = Order::where('user_id', Auth::id()) //@todo: change 2 to Auth::id()
-                        ->where('order_status', 0)
-                        ->first();
+        $cart = new ProductOrder();
 
-        if($currorder->count() > 0) {
-            $orderno = $currorder;
-        }
-        else {
-            $order = new Order();
+        $cart->order_id = $request->orderid;
+        $cart->fp_id = $request->productid;
+        $cart->quantity = $request->qty;
 
-            $order->order_number = Auth::id() . str_pad(rand(1,999), 3, "0", STR_PAD_LEFT) . date('Ymd'); //@todo: change 2 to Auth::id()
-            $order->user_id = Auth::id(); //@todo: change 2 to Auth::id()
-            $order->order_status = 0;
-
-            $order->save();
-
-            $orderno = $order;
-        }
+        $cart->save();
 
         return response()->json([
-            'order_number' => $orderno
+            'message' => 'Product successfully added to cart!'
         ]);
     }
 

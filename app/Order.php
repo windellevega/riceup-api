@@ -27,7 +27,7 @@ class Order extends Model
     /**
     * User that has Order
     **/
-    public function ProductOrder()
+    public function User()
     {
         return $this->belongsTo('App\User');
     }
@@ -37,6 +37,6 @@ class Order extends Model
     **/
     public function setOrderNumberAttribute($value)
     {
-        $this->attributes['order_number'] = strtolower('RUORD' . $value);
+        $this->attributes['order_number'] = strtoupper('RUORD' . $value);
     }
 }
