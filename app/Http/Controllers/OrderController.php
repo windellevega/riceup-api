@@ -16,7 +16,19 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $order = Order::where('user_id', Auth::id())
+                    ->orderBy('id', 'desc')
+                    ->get();
+        $order->load('ProductOrder');
+
+        if($order->count() != 0) {
+            return response()->json($order);
+        }
+        else {
+            return response()->json([
+                'message' => 'There are no orders found!'
+            ]);
+        }
     }
 
     /**
@@ -69,7 +81,19 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        $order = Order::where('id', $id)
+                    ->where('user_id', Auth::id())
+                    ->first();
+        $order->load('ProductOrder');
+
+        if($order->count() != 0) {
+            return response()->json($order);
+        }
+        else {
+            return response()->json([
+                'message' => "This order doesn't exist!"
+            ]);
+        }
     }
 
     /**

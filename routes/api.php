@@ -47,6 +47,16 @@ Route::middleware('auth:api')->post('/order/new', [
 	'uses' => 'OrderController@store'
 ]);
 
+Route::middleware('auth:api')->get('/orders', [
+	'as' => 'orders-list', 
+	'uses' => 'OrderController@index'
+]);
+
+Route::middleware('auth:api')->get('/order/{id}', [
+	'as' => 'order-show',
+	'uses' => 'OrderController@show'
+]);
+
 Route::middleware('auth:api')->post('/cart/add', [
 	'as' => 'cart-add',
 	'uses' => 'ProductOrderController@store'
