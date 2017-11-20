@@ -61,3 +61,8 @@ Route::middleware('auth:api')->post('/cart/add', [
 	'as' => 'cart-add',
 	'uses' => 'ProductOrderController@store'
 ]);
+
+Route::middleware('auth:api')->post('/product/add-image', [
+	'as' => 'product-add-image',
+	'uses' => 'FarmerProductController@update'
+]);

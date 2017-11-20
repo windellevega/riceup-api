@@ -8,6 +8,8 @@ use App\FarmerProduct;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
+use Carbon\Carbon;
+
 class FarmerProductController extends Controller
 {
     /**
@@ -110,9 +112,27 @@ class FarmerProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
+        $fileName = '5' . '-' . Carbon::now()->timestamp . '.' . $request->image->getClientOriginalExtension();
+        $imageFile = $request->image->move(public_path('photos/product'), $fileName);
+
+        $product = FarmerProduct::find(5)
+                        ->first();
+        $product->photo_url = 'public/photos/product/' . $fileName;
+        $product->save();
+
+        return response()->json([
+            'message' => 'Image uploaded successfully!'
+        ]);
     }
 
     /**
