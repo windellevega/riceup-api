@@ -37,7 +37,7 @@ Route::middleware('auth:api')->get('/users/{type?}', [
 	'uses' => 'UserController@index'
 ]);
 
-Route::middleware('auth:api')->get('/user/{id}', [
+Route::middleware('auth:api')->get('/user/{username}', [
 	'as' => 'user-show',
 	'uses' => 'UserController@show'
 ]);

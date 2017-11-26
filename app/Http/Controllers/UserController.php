@@ -73,7 +73,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::where('id', $id)
+        $user = User::where('username', $username)
                         ->get();
         return response()->json($user);
     }
