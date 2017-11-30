@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 use App\User;
 use App\FarmerProduct;
+
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -72,11 +73,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($username)
+    public function show(Request $request, $id = 0)
     {
-        $user = User::where('username', $username)
+        if($id == 0) {
+            return $request->user();
+        }
+        else {
+            $user = User::where('id', $id)
                         ->get();
-        return response()->json($user);
+            return response()->json($user);
+        }
+        
     }
 
     /**

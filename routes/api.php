@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::middleware('auth:api')->get('/products/{id?}', [
 	'as' => 'products-list', 
 	'uses' => 'FarmerProductController@index'
@@ -37,7 +33,7 @@ Route::middleware('auth:api')->get('/users/{type?}', [
 	'uses' => 'UserController@index'
 ]);
 
-Route::middleware('auth:api')->get('/user/{username}', [
+Route::middleware('auth:api')->get('/user/{id?}', [
 	'as' => 'user-show',
 	'uses' => 'UserController@show'
 ]);

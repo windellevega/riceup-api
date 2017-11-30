@@ -51,7 +51,7 @@ class OrderController extends Controller
     {
         $currorder = Order::where('user_id', Auth::id()) //@todo: change 2 to Auth::id()
                         ->where('order_status', 0)
-                        ->first();
+                        ->get();
 
         if($currorder->count() > 0) {
             $orderno = $currorder;
