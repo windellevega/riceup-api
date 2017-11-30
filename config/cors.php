@@ -12,7 +12,7 @@ return [
      */
     'supportsCredentials' => false,
     'allowedOrigins' => ['*'],
-    'allowedHeaders' => ['Content-Type', 'X-Requested-With', 'Authentication'],
+    'allowedHeaders' => ['Content-Type', 'X-Requested-With', 'Authorization'],
     'allowedMethods' => ['GET', 'POST', 'PUT', 'DELETE'],
     'exposedHeaders' => [],
     'maxAge' => 0,
