@@ -57,7 +57,8 @@ class FarmerProductController extends Controller
             'unit' => 'required',
             'price' => 'required|numeric',
             'stocks' => 'required|numeric',
-            'harvest_date' => 'required|date'
+            'harvest_date' => 'required|date',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024'
         ]);
 
         if($validator->fails()) {
@@ -68,12 +69,24 @@ class FarmerProductController extends Controller
 
         $product->user_id = Auth::id(); //@todo: replace with id of logged in user using Auth::id()
         $product->product_name = $request->name;
-        $product->photo_url = (isset($request->photo_url) ? $request->photo_url : '/photos/product/default.jpg');
+
+        if(isset($request->image)) {
+            $fileName = Carbon::now()->timestamp . '.' . $request->image->getClientOriginalExtension();
+            $imageFile = $request->image->move(public_path('photos/product'), $fileName);
+            $product->photo_url = 'public/photos/product/' . $fileName;
+        }
+        else {
+            $product->photo_url = 'public/photos/product/default.jpg';
+        }
+        
         $product->product_desc = $request->desc;
         $product->unit_type = $request->unit;
         $product->price_per_unit = $request->price;
         $product->stocks_available = $request->stocks;
         $product->date_of_harvest = $request->harvest_date;
+
+        
+
         $product->save();
 
         return response()->json([
@@ -114,25 +127,7 @@ class FarmerProductController extends Controller
      */
     public function update(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
 
-        if($validator->fails()) {
-            return response()->json($validator->errors()->all());
-        }
-
-        $fileName = '5' . '-' . Carbon::now()->timestamp . '.' . $request->image->getClientOriginalExtension();
-        $imageFile = $request->image->move(public_path('photos/product'), $fileName);
-
-        $product = FarmerProduct::find(5)
-                        ->first();
-        $product->photo_url = 'public/photos/product/' . $fileName;
-        $product->save();
-
-        return response()->json([
-            'message' => 'Image uploaded successfully!'
-        ]);
     }
 
     /**

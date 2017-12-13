@@ -80,7 +80,13 @@ class ProductOrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $cart = ProductOrder::find($id);
+        $cart->quantity = $request->qty;
+        $cart->save();
+
+        return response()->json([
+            'message' => 'Product quantity updated on cart!'
+        ]);
     }
 
     /**
@@ -91,6 +97,11 @@ class ProductOrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cart = ProductOrder::find($id);
+        $cart->delete();
+
+        return response()->json([
+            'message' => 'Product removed from cart!'
+        ]);
     }
 }

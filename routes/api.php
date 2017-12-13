@@ -88,9 +88,14 @@ Route::middleware('auth:api')->post('/cart/add', [
 	'uses' => 'ProductOrderController@store'
 ]);
 
+//Edit product quantity
+Route::middleware('auth:api')->patch('/cart/update/{id}', [
+    'as' => 'cart-update',
+    'uses' => 'ProductOrderController@update'
+]);
 
-//Test for uploading image
-Route::middleware('auth:api')->post('/product/add-image', [
-	'as' => 'product-add-image',
-	'uses' => 'FarmerProductController@update'
+//Remove product from cart
+Route::middleware('auth:api')->delete('/cart/remove/{id}', [
+    'as' => 'cart-remove',
+    'uses' => 'ProductOrderController@destroy'
 ]);
