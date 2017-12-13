@@ -104,7 +104,7 @@ class UserController extends Controller
 
         if(isset($request->photo)) {
             $fileName = Carbon::now()->timestamp . '.' . $request->photo->getClientOriginalExtension();
-            $imageFile = $request->photo->move(public_path('photos/profile'), $fileName);
+            $imageFile = $request->photo->move(public_path('photos/profile/'), $fileName);
             $user->photo_url = 'public/photos/profile/' . $fileName;
         }
         else {
@@ -113,6 +113,7 @@ class UserController extends Controller
         
         $user->is_farmer = isset($request->is_farmer) ? $request->is_farmer : null;
         $user->history = isset($request->history) ? $request->history : null;
+        $user->years_in_farming = isset($request->years_farm) ? $request->years_farm : null;
         $user->current_lat = $request->address_lat;
         $user->current_long = $request->address_long;
 
