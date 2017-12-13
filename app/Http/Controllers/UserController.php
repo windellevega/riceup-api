@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 use App\User;
 use App\FarmerProduct;
+
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -64,7 +67,61 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'username' => 'required',
+            'password' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'address' => 'required',
+            'address_lat' => 'required|numeric',
+            'address_long' => 'required|numeric',
+            'mobile_number' => 'numeric|regex:/(09)[0-9]{9}/',
+            'email' => 'email',
+            'years_bus' => 'integer',
+            'years_farm' => 'integer',
+            'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            'is_farmer' => 'boolean'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
+        $user = new User();
+
+        $user->username = $request->username;
+        $user->password = Hash::make($request->password);
+        $user->firstname = $request->firstname;
+        $user->middlename = isset($request->middlename) ? $request->middlename : null;
+        $user->lastname = $request->lastname;
+        $user->address = $request->address;
+        $user->address_lat = $request->address_lat;
+        $user->address_long = $request->address_long;
+        $user->business_name = isset($request->bus_name) ? $request->bus_name : null;
+        $user->mobile_no = isset($request->mobile_no) ? $request->mobile_no : null;
+        $user->email = isset($request->email) ? $request->email : null;
+        $user->years_in_business = isset($request->years_bus) ? $request->years_bus : null;
+
+        if(isset($request->photo)) {
+            $fileName = Carbon::now()->timestamp . '.' . $request->photo->getClientOriginalExtension();
+            $imageFile = $request->photo->move(public_path('photos/profile'), $fileName);
+            $user->photo_url = 'public/photos/profile/' . $fileName;
+        }
+        else {
+            $product->photo_url = 'public/photos/profile/default.jpg';
+        }
+        
+        $user->is_farmer = isset($request->is_farmer) ? $request->is_farmer : null;
+        $user->history = isset($request->history) ? $request->history : null;
+        $user->current_lat = $request->address_lat;
+        $user->current_long = $request->address_long;
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Registered Successfully!'
+        ]);
+
     }
 
     /**

@@ -35,6 +35,12 @@ ROUTES FOR USER METHODS
 -----------------------
 */
 
+//User registration
+Route::middleware('auth:api')->post('/user/register', [
+	'as' => 'user-register',
+	'uses' => 'UserController@store'
+]);
+
 //Show list of users
 //Optional: type - to filter users per type (farmer or user)
 Route::middleware('auth:api')->get('/users/{type?}', [
