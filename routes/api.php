@@ -43,7 +43,7 @@ ROUTES FOR USER METHODS
 */
 
 //User registration
-Route::middleware('auth:api')->post('/user/register', [
+Route::post('/user/register', [
 	'as' => 'user-register',
 	'uses' => 'UserController@store'
 ]);
@@ -60,6 +60,12 @@ Route::middleware('auth:api')->get('/users/{type?}', [
 Route::middleware('auth:api')->get('/user/{id?}', [
 	'as' => 'user-show',
 	'uses' => 'UserController@show'
+]);
+
+//Update User Profile
+Route::middleware('auth:api')->patch('/user/update', [
+    'as' => 'user-update',
+    'uses' => 'UserController@update'
 ]);
 
 
