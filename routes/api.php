@@ -28,6 +28,13 @@ Route::middleware('auth:api')->post('/product/add', [
 	'uses' => 'FarmerProductController@store'
 ]);
 
+//Remove product
+//Required: id - product id
+Route::middleware('auth:api')->delete('/product/remove/{id}', [
+    'as' => 'product-remove',
+    'uses' => 'FarmerProductController@destroy'
+]);
+
 
 /*
 -----------------------

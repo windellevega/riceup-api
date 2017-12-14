@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\FarmerProduct;
 use App\User;
-use Illuminate\Support\Facades\Auth;
 
 use Carbon\Carbon;
 
@@ -138,6 +138,21 @@ class FarmerProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = FarmerProduct::where('id', $id)
+                    ->where('user_id', Auth::id());
+        if($product->count()) {
+            $product->delete();
+            return response()->json([
+                'message' => 'Product successfully removed!'
+            ]);
+        }
+        else {
+            return response()->json([
+                'message' => 'Either product doesn\'t exist or you are unauthorized to delete this product!'
+            ]);
+        }
+        
+
+        
     }
 }

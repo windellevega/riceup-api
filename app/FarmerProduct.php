@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FarmerProduct extends Model
 {
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -16,6 +18,8 @@ class FarmerProduct extends Model
         'price_per_unit', 'stocks_available',
         'date_of_harvest', 'unit_type', 'photo_url',
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
     * FarmerProduct that is in ProductOrder
