@@ -165,7 +165,6 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'username' => 'required',
             'password' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
@@ -177,7 +176,6 @@ class UserController extends Controller
             'years_bus' => 'integer',
             'years_farm' => 'integer',
             'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024',
-            'is_farmer' => 'boolean'
         ]);
 
         if($validator->fails()) {
@@ -186,7 +184,6 @@ class UserController extends Controller
 
         $user = User::find(Auth::id());
 
-        $user->username = $request->username;
         $user->password = Hash::make($request->password);
         $user->firstname = $request->firstname;
         $user->middlename = isset($request->middlename) ? $request->middlename : null;
@@ -208,7 +205,6 @@ class UserController extends Controller
             $user->photo_url = 'public/photos/profile/default.jpg';
         }
         
-        $user->is_farmer = isset($request->is_farmer) ? $request->is_farmer : null;
         $user->history = isset($request->history) ? $request->history : null;
         $user->years_in_farming = isset($request->years_farm) ? $request->years_farm : null;
         $user->current_lat = isset($request->address_lat) ? $request->address_lat : null;
