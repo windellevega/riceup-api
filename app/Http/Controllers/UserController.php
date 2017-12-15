@@ -73,8 +73,8 @@ class UserController extends Controller
             'firstname' => 'required',
             'lastname' => 'required',
             'address' => 'required',
-            'address_lat' => 'required|numeric',
-            'address_long' => 'required|numeric',
+            'address_lat' => 'numeric',
+            'address_long' => 'numeric',
             'mobile_number' => 'numeric|regex:/(09)[0-9]{9}/',
             'email' => 'email',
             'years_bus' => 'integer',
@@ -170,8 +170,8 @@ class UserController extends Controller
             'firstname' => 'required',
             'lastname' => 'required',
             'address' => 'required',
-            'address_lat' => 'required|numeric',
-            'address_long' => 'required|numeric',
+            'address_lat' => 'numeric',
+            'address_long' => 'numeric',
             'mobile_number' => 'numeric|regex:/(09)[0-9]{9}/',
             'email' => 'email',
             'years_bus' => 'integer',
@@ -192,8 +192,8 @@ class UserController extends Controller
         $user->middlename = isset($request->middlename) ? $request->middlename : null;
         $user->lastname = $request->lastname;
         $user->address = $request->address;
-        $user->address_lat = $request->address_lat;
-        $user->address_long = $request->address_long;
+        $user->address_lat = isset($request->address_lat) ? $request->address_lat : null;
+        $user->address_long = isset($request->address_long) ? $request->address_long : null;
         $user->business_name = isset($request->bus_name) ? $request->bus_name : null;
         $user->mobile_no = isset($request->mobile_no) ? $request->mobile_no : null;
         $user->email = isset($request->email) ? $request->email : null;
@@ -211,8 +211,8 @@ class UserController extends Controller
         $user->is_farmer = isset($request->is_farmer) ? $request->is_farmer : null;
         $user->history = isset($request->history) ? $request->history : null;
         $user->years_in_farming = isset($request->years_farm) ? $request->years_farm : null;
-        $user->current_lat = $request->address_lat;
-        $user->current_long = $request->address_long;
+        $user->current_lat = isset($request->address_lat) ? $request->address_lat : null;
+        $user->current_long = isset($request->address_long) ? $request->address_long : null;
 
         $user->save();
 
