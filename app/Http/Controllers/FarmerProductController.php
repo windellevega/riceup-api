@@ -26,9 +26,14 @@ class FarmerProductController extends Controller
         else {
             $products = FarmerProduct::where('user_id', $id)
                             ->get();
-            $product->load('User');
+            $products->load('User');
         }
-        
+
+        if($products->count() != 0) {
+            return response()->json([
+                'message' => 'No products are found!'
+            ]);
+        }        
         
         return response()->json($products);
     }
@@ -104,6 +109,11 @@ class FarmerProductController extends Controller
     {
         $product = FarmerProduct::where('id', $id)
                         ->get();
+        if($product->count() != 0) {
+            return response()->json([
+                'message' => 'No product found!'
+            ]);
+        }
         return response()->json($product);
     }
 
