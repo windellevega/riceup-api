@@ -75,14 +75,15 @@ class FarmerProductController extends Controller
         $product->user_id = Auth::id(); //@todo: replace with id of logged in user using Auth::id()
         $product->product_name = $request->name;
 
-        if(isset($request->image)) {
+        /*if(isset($request->image)) {
             $fileName = Carbon::now()->timestamp . '.' . $request->image->getClientOriginalExtension();
             $imageFile = $request->image->move(public_path('photos/product'), $fileName);
             $product->photo_url = 'public/photos/product/' . $fileName;
         }
         else {
             $product->photo_url = 'public/photos/product/default.jpg';
-        }
+        }*/
+        $product->photo_url = $request->photo_url;
         
         $product->product_desc = $request->desc;
         $product->unit_type = $request->unit;

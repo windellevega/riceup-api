@@ -102,14 +102,16 @@ class UserController extends Controller
         $user->email = isset($request->email) ? $request->email : null;
         $user->years_in_business = isset($request->years_bus) ? $request->years_bus : null;
 
-        if(isset($request->photo)) {
+        /*if(isset($request->photo)) {
             $fileName = Carbon::now()->timestamp . '.' . $request->photo->getClientOriginalExtension();
             $imageFile = $request->photo->move(public_path('photos/profile/'), $fileName);
             $user->photo_url = 'public/photos/profile/' . $fileName;
         }
         else {
             $user->photo_url = 'public/photos/profile/default.jpg';
-        }
+        }*/
+
+        $user->photo_url = isset($request->photo_url) ? $request->photo_url : null;
         
         $user->is_farmer = isset($request->is_farmer) ? $request->is_farmer : null;
         $user->history = isset($request->history) ? $request->history : null;
