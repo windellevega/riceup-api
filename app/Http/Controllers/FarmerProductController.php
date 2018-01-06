@@ -83,7 +83,7 @@ class FarmerProductController extends Controller
         else {
             $product->photo_url = 'public/photos/product/default.jpg';
         }*/
-        $product->photo_url = $request->photo_url;
+        $product->photo_url = isset($request->photo_url) ? $request->photo_url : 'public/photos/product/default.jpg';
         
         $product->product_desc = $request->desc;
         $product->unit_type = $request->unit;

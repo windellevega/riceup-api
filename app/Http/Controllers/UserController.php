@@ -111,7 +111,7 @@ class UserController extends Controller
             $user->photo_url = 'public/photos/profile/default.jpg';
         }*/
 
-        $user->photo_url = isset($request->photo_url) ? $request->photo_url : null;
+        $user->photo_url = isset($request->photo_url) ? $request->photo_url : 'public/photos/profile/default.jpg';
         
         $user->is_farmer = isset($request->is_farmer) ? $request->is_farmer : null;
         $user->history = isset($request->history) ? $request->history : null;
@@ -207,7 +207,7 @@ class UserController extends Controller
             $user->photo_url = 'public/photos/profile/default.jpg';
         }*/
 
-        $user->photo_url = isset($request->photo_url) ? $request->photo_url : null;
+        $user->photo_url = isset($request->photo_url) ? $request->photo_url : 'public/photos/profile/default.jpg';
         
         $user->history = isset($request->history) ? $request->history : null;
         $user->years_in_farming = isset($request->years_farm) ? $request->years_farm : null;
