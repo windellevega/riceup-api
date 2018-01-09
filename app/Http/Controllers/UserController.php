@@ -79,8 +79,7 @@ class UserController extends Controller
             'email' => 'email',
             'years_bus' => 'integer',
             'years_farm' => 'integer',
-            'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024',
-            'is_farmer' => 'boolean'
+            'is_farmer' => 'required|boolean'
         ]);
 
         if($validator->fails()) {
@@ -92,15 +91,15 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->password = Hash::make($request->password);
         $user->firstname = $request->firstname;
-        $user->middlename = isset($request->middlename) ? $request->middlename : null;
+        $user->middlename = $request->middlename;
         $user->lastname = $request->lastname;
         $user->address = $request->address;
         $user->address_lat = $request->address_lat;
         $user->address_long = $request->address_long;
-        $user->business_name = isset($request->bus_name) ? $request->bus_name : null;
-        $user->mobile_no = isset($request->mobile_no) ? $request->mobile_no : null;
-        $user->email = isset($request->email) ? $request->email : null;
-        $user->years_in_business = isset($request->years_bus) ? $request->years_bus : null;
+        $user->business_name = $request->bus_name;
+        $user->mobile_no = $request->mobile_no;
+        $user->email = $request->email;
+        $user->years_in_business = $request->years_bus;
 
         /*if(isset($request->photo)) {
             $fileName = Carbon::now()->timestamp . '.' . $request->photo->getClientOriginalExtension();
@@ -113,9 +112,9 @@ class UserController extends Controller
 
         $user->photo_url = isset($request->photo_url) ? $request->photo_url : 'public/photos/profile/default.jpg';
         
-        $user->is_farmer = isset($request->is_farmer) ? $request->is_farmer : null;
-        $user->history = isset($request->history) ? $request->history : null;
-        $user->years_in_farming = isset($request->years_farm) ? $request->years_farm : null;
+        $user->is_farmer = $request->is_farmer;
+        $user->history = $request->history;
+        $user->years_in_farming = $request->years_farm;
         $user->current_lat = $request->address_lat;
         $user->current_long = $request->address_long;
 
@@ -176,8 +175,7 @@ class UserController extends Controller
             'mobile_number' => 'numeric|regex:/(09)[0-9]{9}/',
             'email' => 'email',
             'years_bus' => 'integer',
-            'years_farm' => 'integer',
-            'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            'years_farm' => 'integer'
         ]);
 
         if($validator->fails()) {
@@ -186,17 +184,18 @@ class UserController extends Controller
 
         $user = User::find(Auth::id());
 
+        $user->username = $user->username;
         $user->password = Hash::make($request->password);
         $user->firstname = $request->firstname;
-        $user->middlename = isset($request->middlename) ? $request->middlename : null;
+        $user->middlename = $request->middlename;
         $user->lastname = $request->lastname;
         $user->address = $request->address;
-        $user->address_lat = isset($request->address_lat) ? $request->address_lat : null;
-        $user->address_long = isset($request->address_long) ? $request->address_long : null;
-        $user->business_name = isset($request->bus_name) ? $request->bus_name : null;
-        $user->mobile_no = isset($request->mobile_no) ? $request->mobile_no : null;
-        $user->email = isset($request->email) ? $request->email : null;
-        $user->years_in_business = isset($request->years_bus) ? $request->years_bus : null;
+        $user->address_lat = $request->address_lat;
+        $user->address_long = $request->address_long;
+        $user->business_name = $request->bus_name;
+        $user->mobile_no = $request->mobile_no;
+        $user->email = $request->email;
+        $user->years_in_business = $request->years_bus;
 
         /*if(isset($request->photo)) {
             $fileName = Carbon::now()->timestamp . '.' . $request->photo->getClientOriginalExtension();
@@ -209,10 +208,11 @@ class UserController extends Controller
 
         $user->photo_url = isset($request->photo_url) ? $request->photo_url : 'public/photos/profile/default.jpg';
         
-        $user->history = isset($request->history) ? $request->history : null;
-        $user->years_in_farming = isset($request->years_farm) ? $request->years_farm : null;
-        $user->current_lat = isset($request->address_lat) ? $request->address_lat : null;
-        $user->current_long = isset($request->address_long) ? $request->address_long : null;
+        $user->is_farmer = $user->is_farmer;
+        $user->history = $request->history;
+        $user->years_in_farming = $request->years_farm;
+        $user->current_lat = $request->address_lat;
+        $user->current_long = $request->address_long;
 
         $user->save();
 

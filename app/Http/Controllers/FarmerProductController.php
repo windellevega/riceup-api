@@ -62,8 +62,7 @@ class FarmerProductController extends Controller
             'unit' => 'required',
             'price' => 'required|numeric',
             'stocks' => 'required|numeric',
-            'harvest_date' => 'required|date',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024'
+            'harvest_date' => 'required|date'
         ]);
 
         if($validator->fails()) {
@@ -136,9 +135,48 @@ class FarmerProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'desc' => 'required',
+            'unit' => 'required',
+            'price' => 'required|numeric',
+            'stocks' => 'required|numeric',
+            'harvest_date' => 'required|date'
+        ]);
 
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
+        $product = FarmerProduct::where('id', $id)
+                    ->where('user_id', Auth::id())
+                    ->first();
+
+        $product->product_name = $request->name;
+
+        /*if(isset($request->image)) {
+            $fileName = Carbon::now()->timestamp . '.' . $request->image->getClientOriginalExtension();
+            $imageFile = $request->image->move(public_path('photos/product'), $fileName);
+            $product->photo_url = 'public/photos/product/' . $fileName;
+        }
+        else {
+            $product->photo_url = 'public/photos/product/default.jpg';
+        }*/
+        $product->photo_url = isset($request->photo_url) ? $request->photo_url : 'public/photos/product/default.jpg';
+        
+        $product->product_desc = $request->desc;
+        $product->unit_type = $request->unit;
+        $product->price_per_unit = $request->price;
+        $product->stocks_available = $request->stocks;
+        $product->date_of_harvest = $request->harvest_date;
+
+        $product->save();
+
+        return response()->json([
+            'message' => 'Product successfully updated!'
+        ]);
     }
 
     /**

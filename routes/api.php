@@ -28,6 +28,13 @@ Route::middleware('auth:api')->post('/product/add', [
 	'uses' => 'FarmerProductController@store'
 ]);
 
+//Update product
+//Required: id - product id
+Route::middleware('auth:api')->patch('/product/update/{id}', [
+    'as' => 'product-update',
+    'uses' => 'FarmerProductController@update'
+]);
+
 //Remove product
 //Required: id - product id
 Route::middleware('auth:api')->delete('/product/remove/{id}', [
