@@ -85,6 +85,7 @@ class OrderController extends Controller
                     ->where('user_id', Auth::id())
                     ->first();
         $order->load('ProductOrder');
+        $order->load('ProductOrder.FarmerProduct');
 
         if($order->count() != 0) {
             return response()->json($order);
