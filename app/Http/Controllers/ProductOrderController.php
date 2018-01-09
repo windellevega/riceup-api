@@ -36,12 +36,21 @@ class ProductOrderController extends Controller
      */
     public function store(Request $request)
     {
-        $cart = new ProductOrder();
-
-        $cart->order_id = $request->orderid;
-        $cart->fp_id = $request->productid;
-        $cart->quantity = $request->qty;
-
+        $cart = ProductOrder::where('order_id', $request->orderid)
+                    ->where('fp_id', $request->productid)
+                    ->first();
+                    
+        if($cart->count() > 0) {
+            $cart->quantity = $cart->quantity + $request->qty;
+        }
+        else {
+            $cart = new ProductOrder();
+            
+            $cart->order_id = $request->orderid;
+            $cart->fp_id = $request->productid;
+            $cart->quantity = $request->qty;
+        }
+        
         $cart->save();
 
         return response()->json([
