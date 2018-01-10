@@ -40,7 +40,7 @@ class ProductOrderController extends Controller
                     ->where('fp_id', $request->productid)
                     ->first();
                     
-        if($cart->count() > 0) {
+        if($cart) {
             $cart->quantity = $cart->quantity + $request->qty;
         }
         else {
