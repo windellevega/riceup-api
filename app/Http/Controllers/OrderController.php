@@ -17,6 +17,7 @@ class OrderController extends Controller
     public function index()
     {
         $order = Order::where('user_id', Auth::id())
+                    ->where('order_status', '!=', '0')
                     ->orderBy('id', 'desc')
                     ->get();
         $order->load('ProductOrder');
