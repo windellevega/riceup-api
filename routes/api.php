@@ -101,6 +101,13 @@ Route::middleware('auth:api')->get('/order/{id}', [
 	'uses' => 'OrderController@show'
 ]);
 
+//Checkout specific order
+//Required: id - order id
+Route::middleware('auth:api')->patch('/order/checkout/{id}', [
+    'as' => 'order-checkout',
+    'uses' => 'OrderController@update'
+]);
+
 
 /*
 -----------------------

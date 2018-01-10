@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Order;
 use Illuminate\Support\Facades\Auth;
 
+use Carbon\Carbon;
+
 class OrderController extends Controller
 {
     /**
@@ -119,6 +121,19 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $order = Order::where('id', $id)
+                    ->where('user_id', Auth::id())
+                    ->first();
+        $order->order_date = Carbon::now();
+        $order->mode_of_shipping = $request->shipping_mode;
+        $order->order_status = $request->order_status;
+        $order->remarks = $request->remarks;
+
+        $order->save();
+
+        return response()->json([
+            'message' => "You have checked out your order!"
+        ]);
     }
 
     /**
