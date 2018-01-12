@@ -88,7 +88,7 @@ class OrderController extends Controller
                     ->where('user_id', Auth::id())
                     ->first();
         $order->load('ProductOrder');
-        $order->load('ProductOrder.FarmerProduct');
+        $order->load('ProductOrder.FarmerProduct.User');
 
         if($order->count() != 0) {
             return response()->json($order);
