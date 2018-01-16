@@ -175,7 +175,8 @@ class UserController extends Controller
             'mobile_number' => 'numeric|regex:/(09)[0-9]{9}/',
             'email' => 'email',
             'years_bus' => 'integer',
-            'years_farm' => 'integer'
+            'years_farm' => 'integer',
+            'is_farmer' => 'boolean'
         ]);
 
         if($validator->fails()) {
@@ -208,7 +209,7 @@ class UserController extends Controller
 
         $user->photo_url = isset($request->photo_url) ? $request->photo_url : 'public/photos/profile/default.jpg';
         
-        $user->is_farmer = $user->is_farmer;
+        $user->is_farmer = $request->is_farmer;
         $user->history = $request->history;
         $user->years_in_farming = $request->years_farm;
         $user->current_lat = $request->address_lat;
