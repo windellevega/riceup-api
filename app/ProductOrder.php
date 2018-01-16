@@ -28,6 +28,6 @@ class ProductOrder extends Model
     **/
     public function FarmerProduct()
     {
-        return $this->belongsTo('App\FarmerProduct', 'fp_id');
+        return $this->belongsTo('App\FarmerProduct', 'fp_id')->withTrashed();
     }
 }
