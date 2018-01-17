@@ -75,6 +75,12 @@ Route::middleware('auth:api')->patch('/user/update', [
     'uses' => 'UserController@update'
 ]);
 
+//Change password
+Route::middleware('auth:api')->patch('/user/changepass', [
+    'as' => 'user-changepass',
+    'uses' => 'UserController@changePassword',
+]);
+
 
 /* 
 ------------------------
