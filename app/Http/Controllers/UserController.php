@@ -68,7 +68,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'username' => 'required|unique:users',
+            'username' => 'required',
             'password' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
@@ -166,6 +166,7 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validator = \Validator::make($request->all(), [
+            'password' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
             'address' => 'required',
@@ -174,8 +175,7 @@ class UserController extends Controller
             'mobile_number' => 'numeric|regex:/(09)[0-9]{9}/',
             'email' => 'email',
             'years_bus' => 'integer',
-            'years_farm' => 'integer',
-            'is_farmer' => 'boolean'
+            'years_farm' => 'integer'
         ]);
 
         if($validator->fails()) {
@@ -184,6 +184,8 @@ class UserController extends Controller
 
         $user = User::find(Auth::id());
 
+        $user->username = $user->username;
+        $user->password = Hash::make($request->password);
         $user->firstname = $request->firstname;
         $user->middlename = $request->middlename;
         $user->lastname = $request->lastname;
@@ -195,18 +197,9 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->years_in_business = $request->years_bus;
 
-        /*if(isset($request->photo)) {
-            $fileName = Carbon::now()->timestamp . '.' . $request->photo->getClientOriginalExtension();
-            $imageFile = $request->photo->move(public_path('photos/profile/'), $fileName);
-            $user->photo_url = 'public/photos/profile/' . $fileName;
-        }
-        else {
-            $user->photo_url = 'public/photos/profile/default.jpg';
-        }*/
-
         $user->photo_url = isset($request->photo_url) ? $request->photo_url : 'public/photos/profile/default.jpg';
         
-        $user->is_farmer = $request->is_farmer;
+        $user->is_farmer = $user->is_farmer;
         $user->history = $request->history;
         $user->years_in_farming = $request->years_farm;
         $user->current_lat = $request->address_lat;
@@ -216,29 +209,6 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Profile Updated Successfully!'
-        ]);
-    }
-
-    public function changePassword(Request $request) {
-        $validator = \Validator::make($request->all(), [
-            'oldpassword' => 'required',
-            'newpassword' => 'required',
-            
-        ]);
-
-        $user = User::find(Auth::id());
-
-        if(!Hash::check($request->oldpassword, $user->password)) {
-            return response()->json([
-                'message' => 'Old password is incorrect!'
-            ]);
-        }
-
-        $user->password = Hash::make($request->newpassword);
-        $user->save();
-
-        return response()->json([
-            'message' => 'Password changed successfully!'
         ]);
     }
 

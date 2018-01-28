@@ -49,6 +49,7 @@ class ProductOrderController extends Controller
             $cart->order_id = $request->orderid;
             $cart->fp_id = $request->productid;
             $cart->quantity = $request->qty;
+            $cart->status = 0;
         }
         
         $cart->save();
@@ -91,10 +92,11 @@ class ProductOrderController extends Controller
     {
         $cart = ProductOrder::find($id);
         $cart->quantity = $request->qty;
+        $cart->status = (isset($request->status)? $request->status : $cart->status);
         $cart->save();
 
         return response()->json([
-            'message' => 'Product quantity updated on cart!'
+            'message' => 'Product updated!'
         ]);
     }
 
@@ -112,5 +114,25 @@ class ProductOrderController extends Controller
         return response()->json([
             'message' => 'Product removed from cart!'
         ]);
+    }
+
+    public function displayProductsForDispatch()
+    {
+        $cart = ProductOrder::with('FarmerProduct')
+                ->where('status', 0)
+                ->whereHas('FarmerProduct', function($q) {
+                    $q->where('user_id', Auth::id());
+                })
+                ->get();
+        $cart->load('FarmerProduct');
+        $cart->load('Order.User');
+        if($cart->count()) {
+            return response()->json($cart);
+        }
+        else {
+            return response()->json([
+                'message' => "There are no items for dispatch!"
+            ]);
+        }
     }
 }

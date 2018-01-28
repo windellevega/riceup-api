@@ -199,9 +199,6 @@ class FarmerProductController extends Controller
             return response()->json([
                 'message' => 'Either product doesn\'t exist or you are unauthorized to delete this product!'
             ]);
-        }
-        
-
-        
+        }        
     }
 }
