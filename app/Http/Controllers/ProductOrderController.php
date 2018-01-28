@@ -92,11 +92,10 @@ class ProductOrderController extends Controller
     {
         $cart = ProductOrder::find($id);
         $cart->quantity = $request->qty;
-        $cart->status = (isset($request->status)? $request->status : $cart->status);
         $cart->save();
 
         return response()->json([
-            'message' => 'Product updated!'
+            'message' => 'Product quantity successfully updated on cart!'
         ]);
     }
 
@@ -132,6 +131,29 @@ class ProductOrderController extends Controller
         else {
             return response()->json([
                 'message' => "There are no items for dispatch!"
+            ]);
+        }
+    }
+
+    public function dispatchProduct($id)
+    {
+        $cart = ProductOrder::with('FarmerProduct')
+                ->where('id', $id)
+                ->where('status', 0)
+                ->whereHas('FarmerProduct', function($q) {
+                    $q->where('user_id', Auth::id());
+                })
+                ->first();
+        if($cart) {
+            $cart->status = 1;
+            $cart->save();
+            return response()->json([
+                'message' => "Product has been dispatched!"
+            ]);
+        }
+        else {
+            return response()->json([
+                'message' => "Unable to dispatch product!"
             ]);
         }
     }

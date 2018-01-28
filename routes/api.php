@@ -144,3 +144,9 @@ Route::middleware('auth:api')->get('/fordispatch', [
 	'as' => 'products-fordispatch',
 	'uses' => 'ProductOrderController@displayProductsForDispatch'
 ]);
+
+//Dispatch product
+Route::middleware('auth:api')->patch('/product/dispatch/{id}', [
+	'as' => 'product-dispatch',
+	'uses' => 'ProductOrderController@dispatchProduct'
+]);
