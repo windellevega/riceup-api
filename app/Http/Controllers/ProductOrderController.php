@@ -55,7 +55,7 @@ class ProductOrderController extends Controller
         $cart->save();
 
         return response()->json([
-            'message' => 'Product successfully added to cart!'
+            'message' => 'Product successfully added to cart.'
         ]);
     }
 
@@ -95,7 +95,7 @@ class ProductOrderController extends Controller
         $cart->save();
 
         return response()->json([
-            'message' => 'Product quantity successfully updated on cart!'
+            'message' => 'Product quantity successfully updated on cart.'
         ]);
     }
 
@@ -111,7 +111,7 @@ class ProductOrderController extends Controller
         $cart->delete();
 
         return response()->json([
-            'message' => 'Product removed from cart!'
+            'message' => 'Product removed from cart.'
         ]);
     }
 
@@ -130,7 +130,7 @@ class ProductOrderController extends Controller
         }
         else {
             return response()->json([
-                'message' => "There are no items for dispatch!"
+                'message' => "There are no items for dispatch."
             ]);
         }
     }
@@ -145,15 +145,24 @@ class ProductOrderController extends Controller
                 })
                 ->first();
         if($cart) {
-            $cart->status = 1;
-            $cart->save();
-            return response()->json([
-                'message' => "Product has been dispatched!"
-            ]);
+            if($cart->quantity <= $cart->FarmerProduct->stocks_available) {
+                $cart->status = 1;
+                $cart->FarmerProduct->stocks_available -= $cart->quantity;
+                $cart->save();
+                $cart->FarmerProduct->save();
+                return response()->json([
+                    'message' => "Product has been dispatched."
+                ]);
+            }
+            else {
+                return response()->json([
+                    'message' => "Stock is insufficient. Unable to dipatch product."
+                ]);
+            }     
         }
         else {
             return response()->json([
-                'message' => "Unable to dispatch product!"
+                'message' => "Unable to dispatch product."
             ]);
         }
     }

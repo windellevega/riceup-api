@@ -42,7 +42,7 @@ class UserController extends Controller
         }
         else {
             return response()->json([
-                'message' => 'Invalid user type!'
+                'message' => 'Invalid user type.'
             ]);
         }
 
@@ -121,7 +121,7 @@ class UserController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => 'Registered Successfully!'
+            'message' => 'Registered Successfully.'
         ]);
 
     }
@@ -208,7 +208,7 @@ class UserController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => 'Profile Updated Successfully!'
+            'message' => 'Profile Updated Successfully.'
         ]);
     }
 

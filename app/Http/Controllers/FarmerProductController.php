@@ -95,7 +95,7 @@ class FarmerProductController extends Controller
         $product->save();
 
         return response()->json([
-            'message' => 'Product successfully added!'
+            'message' => 'Product successfully added.'
         ]);
     }
 
@@ -111,7 +111,7 @@ class FarmerProductController extends Controller
                         ->get();
         if($product->count() <= 0) {
             return response()->json([
-                'message' => 'No product found!'
+                'message' => 'No product found.'
             ]);
         }
         return response()->json($product);
@@ -175,7 +175,7 @@ class FarmerProductController extends Controller
         $product->save();
 
         return response()->json([
-            'message' => 'Product successfully updated!'
+            'message' => 'Product successfully updated.'
         ]);
     }
 
@@ -192,12 +192,12 @@ class FarmerProductController extends Controller
         if($product->count()) {
             $product->delete();
             return response()->json([
-                'message' => 'Product successfully removed!'
+                'message' => 'Product successfully removed.'
             ]);
         }
         else {
             return response()->json([
-                'message' => 'Either product doesn\'t exist or you are unauthorized to delete this product!'
+                'message' => 'Either product doesn\'t exist or you are unauthorized to delete this product.'
             ]);
         }        
     }

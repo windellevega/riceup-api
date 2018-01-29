@@ -29,7 +29,7 @@ class OrderController extends Controller
         }
         else {
             return response()->json([
-                'message' => 'There are no orders found!'
+                'message' => 'There are no orders found.'
             ]);
         }
     }
@@ -95,7 +95,7 @@ class OrderController extends Controller
         }
         else {
             return response()->json([
-                'message' => "This order doesn't exist!"
+                'message' => "This order doesn't exist."
             ]);
         }
     }
@@ -132,7 +132,7 @@ class OrderController extends Controller
         $order->save();
 
         return response()->json([
-            'message' => "You have checked out your order!"
+            'message' => "You have checked out your order."
         ]);
     }
 
