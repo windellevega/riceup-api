@@ -166,7 +166,6 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'password' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
             'address' => 'required',
@@ -185,7 +184,7 @@ class UserController extends Controller
         $user = User::find(Auth::id());
 
         $user->username = $user->username;
-        $user->password = Hash::make($request->password);
+        //$user->password = Hash::make($request->password);
         $user->firstname = $request->firstname;
         $user->middlename = $request->middlename;
         $user->lastname = $request->lastname;
