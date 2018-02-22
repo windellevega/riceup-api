@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ProductOrder;
+use App\FarmerProduct;
 use Illuminate\Support\Facades\Auth;
 
 class ProductOrderController extends Controller
@@ -36,6 +37,16 @@ class ProductOrderController extends Controller
      */
     public function store(Request $request)
     {
+        $product = FarmerProduct::find($request->productid);
+
+        $availablestocks = $product->stocks_available - $product->reserved;
+        
+        if($availablestocks < $request->qty) {
+            return response()->json([
+                'message' => 'Insufficient stocks available'
+            ]);
+        }
+
         $cart = ProductOrder::where('order_id', $request->orderid)
                     ->where('fp_id', $request->productid)
                     ->first();
@@ -51,7 +62,9 @@ class ProductOrderController extends Controller
             $cart->quantity = $request->qty;
             $cart->status = 0;
         }
-        
+
+        $product->reserved += $request->qty;
+        $product->save();
         $cart->save();
 
         return response()->json([
@@ -91,7 +104,19 @@ class ProductOrderController extends Controller
     public function update(Request $request, $id)
     {
         $cart = ProductOrder::find($id);
+        $product = FarmerProduct::find($cart->fp_id);
+        $reservedafter = $product->reserved + ($request->qty - $cart->quantity); //8+(5-8) = 5
+
+        if($product->stocks_available < $reservedafter) {
+            return response()->json([
+                'message' => 'Unable to add more quantity to the product.'
+            ]);
+        }
+
+        $product->reserved = $reservedafter;
         $cart->quantity = $request->qty;
+
+        $product->save();
         $cart->save();
 
         return response()->json([
@@ -108,6 +133,11 @@ class ProductOrderController extends Controller
     public function destroy($id)
     {
         $cart = ProductOrder::find($id);
+        $product = FarmerProduct::find($cart->fp_id);
+
+        $product->reserved = $product->reserved - $cart->quantity;
+
+        $product->save();
         $cart->delete();
 
         return response()->json([
@@ -144,10 +174,13 @@ class ProductOrderController extends Controller
                     $q->where('user_id', Auth::id());
                 })
                 ->first();
+
         if($cart) {
             if($cart->quantity <= $cart->FarmerProduct->stocks_available) {
                 $cart->status = 1;
                 $cart->FarmerProduct->stocks_available -= $cart->quantity;
+                $cart->FarmerProduct->reserved -= $cart->quantity;
+
                 $cart->save();
                 $cart->FarmerProduct->save();
                 return response()->json([
