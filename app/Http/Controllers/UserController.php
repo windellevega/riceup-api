@@ -166,7 +166,6 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'password' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
             'address' => 'required',
@@ -185,7 +184,7 @@ class UserController extends Controller
         $user = User::find(Auth::id());
 
         $user->username = $user->username;
-        $user->password = Hash::make($request->password);
+        //$user->password = Hash::make($request->password);
         $user->firstname = $request->firstname;
         $user->middlename = $request->middlename;
         $user->lastname = $request->lastname;
@@ -209,6 +208,38 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Profile Updated Successfully.'
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function changePassword(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'oldpassword' => 'required',
+            'newpassword' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
+        $user = User::find(Auth::id());
+        if(Hash::make($request->oldpassword) != $user->password) {
+            return response()->json([
+                'message' => 'Old password is invalid.'
+            ]);
+        }
+
+        $user->password = Hash::make($request->newpassword);
+        $user->save();
+
+        return response()->json([
+            'message' => 'Your password is updated successfully.'
         ]);
     }
 
