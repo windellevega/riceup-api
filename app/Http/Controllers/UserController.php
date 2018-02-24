@@ -68,7 +68,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'username' => 'required',
+            'username' => 'required|unique:users,username',
             'password' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
@@ -76,7 +76,7 @@ class UserController extends Controller
             'address_lat' => 'numeric',
             'address_long' => 'numeric',
             'mobile_number' => 'numeric|regex:/(09)[0-9]{9}/',
-            'email' => 'email',
+            'email' => 'email|unique:users,email',
             'years_bus' => 'integer',
             'years_farm' => 'integer',
             'is_farmer' => 'required|boolean'
