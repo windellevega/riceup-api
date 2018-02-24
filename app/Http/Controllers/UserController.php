@@ -198,7 +198,7 @@ class UserController extends Controller
 
         $user->photo_url = isset($request->photo_url) ? $request->photo_url : 'public/photos/profile/default.jpg';
         
-        $user->is_farmer = $user->is_farmer;
+        $user->is_farmer = $request->is_farmer;
         $user->history = $request->history;
         $user->years_in_farming = $request->years_farm;
         $user->current_lat = $request->address_lat;
