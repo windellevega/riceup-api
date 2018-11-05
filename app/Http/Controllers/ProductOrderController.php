@@ -152,6 +152,9 @@ class ProductOrderController extends Controller
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
                 })
+                ->whereHas('Order', function($q) {
+                    $q->where('order_status', 1);
+                })
                 ->get();
         $cart->load('FarmerProduct');
         $cart->load('Order.User');
