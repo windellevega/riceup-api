@@ -7,6 +7,11 @@ use App\ProductOrder;
 use App\FarmerProduct;
 use Illuminate\Support\Facades\Auth;
 
+define('STATUS_PENDING', 0);
+define('STATUS_PACKED', 1);
+define('STATUS_DELIVERED', 2);
+define('STATUS_CANCELLED', 2);
+
 class ProductOrderController extends Controller
 {
     /**
@@ -60,12 +65,17 @@ class ProductOrderController extends Controller
             $cart->order_id = $request->orderid;
             $cart->fp_id = $request->productid;
             $cart->quantity = $request->qty;
-            $cart->status = 0;
         }
 
         $product->reserved += $request->qty;
         $product->save();
         $cart->save();
+
+        $cartprodstatus = new CartProductStatus();
+        $cartprodstatus->po_id = $cart->id;
+        $cartprodstatus->product_status = STATUS_PENDING;
+        $cartprodstatus->details = "Product is being processed.";
+        $cartprodstatus->save();
 
         return response()->json([
             'message' => 'Product successfully added to cart.'
@@ -78,9 +88,49 @@ class ProductOrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showWithCurrentStatus($id)
     {
-        //
+        /*$cart = ProductOrder::with('FarmerProduct')
+                ->where('status', 0)
+                ->whereHas('FarmerProduct', function($q) {
+                    $q->where('user_id', Auth::id());
+                })
+                ->whereHas('Order', function($q) {
+                    $q->where('order_status', 1);
+                })
+                ->get();
+        $cart->load('FarmerProduct');
+        $cart->load('Order.User');
+        if($cart->count()) {
+            return response()->json($cart);
+        }
+        else {
+            return response()->json([
+                'message' => "There are no items for dispatch."
+            ]);
+        }*/
+
+        $cart = ProductOrder::with('FarmerProduct')
+                ->with('currentStatus')
+                ->whereHas('FarmerProduct', function($q) {
+                    $q->where('user_id', 2);
+                })
+                ->whereHas('Order', function($q) {
+                    $q->where('order_status', 1);
+                })
+                ->get();
+        $withPending = $cart->where('currentStatus.product_status', STATUS_PENDING);
+        $withPending->load('FarmerProduct');
+        $withPending->load('Order.User');
+
+        if($withPending->count()) {
+            return response()->json($withPending);
+        }
+        else {
+            return response()->json([
+                'message' => "There are no items for dispatch."
+            ]);
+        }
     }
 
     /**
@@ -134,6 +184,8 @@ class ProductOrderController extends Controller
     {
         $cart = ProductOrder::find($id);
         $product = FarmerProduct::find($cart->fp_id);
+        $cartprodstatus = CartProductStatus::where('po_id', $id);
+        $cartprodstatus->delete();
 
         $product->reserved = $product->reserved - $cart->quantity;
 
@@ -147,7 +199,7 @@ class ProductOrderController extends Controller
 
     public function displayProductsForDispatch()
     {
-        $cart = ProductOrder::with('FarmerProduct')
+        /*$cart = ProductOrder::with('FarmerProduct')
                 ->where('status', 0)
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
@@ -160,6 +212,27 @@ class ProductOrderController extends Controller
         $cart->load('Order.User');
         if($cart->count()) {
             return response()->json($cart);
+        }
+        else {
+            return response()->json([
+                'message' => "There are no items for dispatch."
+            ]);
+        }*/
+        $cart = ProductOrder::with('FarmerProduct')
+                ->with('currentStatus')
+                ->whereHas('FarmerProduct', function($q) {
+                    $q->where('user_id', 2);
+                })
+                ->whereHas('Order', function($q) {
+                    $q->where('order_status', 1);
+                })
+                ->get();
+        $withPending = $cart->where('currentStatus.product_status', STATUS_PENDING);
+        $withPending->load('FarmerProduct');
+        $withPending->load('Order.User');
+
+        if($withPending->count()) {
+            return response()->json($withPending);
         }
         else {
             return response()->json([

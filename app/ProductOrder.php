@@ -30,4 +30,17 @@ class ProductOrder extends Model
     {
         return $this->belongsTo('App\FarmerProduct', 'fp_id')->withTrashed();
     }
+
+    /**
+     * ProductOrder has many CartProductStatus
+     */
+    public function CartProductStatus()
+    {
+        return $this->hasMany('App\CartProductStatus', 'po_id');
+    }
+
+    public function currentStatus()
+    {
+        return $this->hasOne('App\CartProductStatus', 'po_id')->latest();
+    }
 }

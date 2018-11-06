@@ -139,6 +139,11 @@ Route::middleware('auth:api')->delete('/cart/remove/{id}', [
     'uses' => 'ProductOrderController@destroy'
 ]);
 
+Route::get('/cart/{id}',[
+	'as' => 'cart-with-latest-status',
+	'uses' => 'ProductOrderController@showWithCurrentStatus'
+]);
+
 //Retrieve products for dispatch
 Route::middleware('auth:api')->get('/fordispatch', [
 	'as' => 'products-fordispatch',
