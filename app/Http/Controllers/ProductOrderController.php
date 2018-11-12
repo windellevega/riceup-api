@@ -294,8 +294,6 @@ class ProductOrderController extends Controller
         //return response()->json($cart->id);
         if($cart->currentStatus->product_status == STATUS_PENDING) {
             if($cart->quantity <= $cart->FarmerProduct->stocks_available) {
-                $cart->FarmerProduct->stocks_available -= $cart->quantity;
-                $cart->FarmerProduct->reserved -= $cart->quantity;
 
                 $cartProdStatus = new CartProductStatus();
                 $cartProdStatus->po_id = $cart->id;
@@ -303,8 +301,6 @@ class ProductOrderController extends Controller
                 $cartProdStatus->details = 'Your product has been packed';
 
                 $cart->save();
-                $cart->FarmerProduct->save();
-                $cartProdStatus->save();
                 return response()->json([
                     'message' => "Product has been packed."
                 ]);
@@ -318,6 +314,36 @@ class ProductOrderController extends Controller
         else {
             return response()->json([
                 'message' => "Unable to pack product."
+            ]);
+        }
+    }
+
+    public function cancelProduct($id)
+    {
+        $cart = ProductOrder::with('FarmerProduct')
+                ->with('currentStatus')
+                ->where('id', $id)
+                ->whereHas('FarmerProduct')
+                ->first();
+        //return response()->json($cart->id);
+        if($cart->currentStatus->product_status == STATUS_PENDING) {
+                $cart->FarmerProduct->stocks_available += $cart->quantity;
+                $cart->FarmerProduct->reserved -= $cart->quantity;
+
+                $cartProdStatus = new CartProductStatus();
+                $cartProdStatus->po_id = $cart->id;
+                $cartProdStatus->product_status = STATUS_PACKED;
+                $cartProdStatus->details = 'You have cancelled this product';
+
+                $cart->FarmerProduct->save();
+                $cartProdStatus->save();
+                return response()->json([
+                    'message' => "Product has been cancelled."
+                ]);  
+        }
+        else {
+            return response()->json([
+                'message' => "Unable to cancel. Product is already out for delivery."
             ]);
         }
     }
