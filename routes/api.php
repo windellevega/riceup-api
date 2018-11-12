@@ -155,3 +155,9 @@ Route::middleware('auth:api')->patch('/product/dispatch/{id}', [
 	'as' => 'product-dispatch',
 	'uses' => 'ProductOrderController@dispatchProduct'
 ]);
+
+//Pack product
+Route::middleware('auth:api')->patch('/product/pack/{id}', [
+	'as' => 'product-pack',
+	'uses' => 'ProductOrderController@packProduct'
+]);

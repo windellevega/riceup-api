@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ProductOrder;
 use App\FarmerProduct;
+use App\CartProductStatus;
 use Illuminate\Support\Facades\Auth;
 
 define('STATUS_PENDING', 0);
@@ -244,21 +245,26 @@ class ProductOrderController extends Controller
     public function dispatchProduct($id)
     {
         $cart = ProductOrder::with('FarmerProduct')
+                ->with('currentStatus')
                 ->where('id', $id)
-                ->where('status', 0)
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
                 })
                 ->first();
-
-        if($cart) {
+        //return response()->json($cart->id);
+        if($cart->currentStatus->product_status == STATUS_PENDING || $cart->currentStatus->product_status == STATUS_PACKED) {
             if($cart->quantity <= $cart->FarmerProduct->stocks_available) {
-                $cart->status = 1;
                 $cart->FarmerProduct->stocks_available -= $cart->quantity;
                 $cart->FarmerProduct->reserved -= $cart->quantity;
 
+                $cartProdStatus = new CartProductStatus();
+                $cartProdStatus->po_id = $cart->id;
+                $cartProdStatus->product_status = STATUS_DELIVERED;
+                $cartProdStatus->details = 'Your product has been delivered';
+
                 $cart->save();
                 $cart->FarmerProduct->save();
+                $cartProdStatus->save();
                 return response()->json([
                     'message' => "Product has been dispatched."
                 ]);
@@ -272,6 +278,46 @@ class ProductOrderController extends Controller
         else {
             return response()->json([
                 'message' => "Unable to dispatch product."
+            ]);
+        }
+    }
+
+    public function packProduct($id)
+    {
+        $cart = ProductOrder::with('FarmerProduct')
+                ->with('currentStatus')
+                ->where('id', $id)
+                ->whereHas('FarmerProduct', function($q) {
+                    $q->where('user_id', Auth::id());
+                })
+                ->first();
+        //return response()->json($cart->id);
+        if($cart->currentStatus->product_status == STATUS_PENDING) {
+            if($cart->quantity <= $cart->FarmerProduct->stocks_available) {
+                $cart->FarmerProduct->stocks_available -= $cart->quantity;
+                $cart->FarmerProduct->reserved -= $cart->quantity;
+
+                $cartProdStatus = new CartProductStatus();
+                $cartProdStatus->po_id = $cart->id;
+                $cartProdStatus->product_status = STATUS_PACKED;
+                $cartProdStatus->details = 'Your product has been packed';
+
+                $cart->save();
+                $cart->FarmerProduct->save();
+                $cartProdStatus->save();
+                return response()->json([
+                    'message' => "Product has been packed."
+                ]);
+            }
+            else {
+                return response()->json([
+                    'message' => "Stock is insufficient. Unable to pack product."
+                ]);
+            }     
+        }
+        else {
+            return response()->json([
+                'message' => "Unable to pack product."
             ]);
         }
     }
