@@ -59,4 +59,12 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\FarmerProduct');
     }
+
+    /**
+    * Shipping Details that belong to User
+    **/
+    public function ShippingDetail()
+    {
+        return $this->hasMany('App\ShippingDetail');
+    }
 }

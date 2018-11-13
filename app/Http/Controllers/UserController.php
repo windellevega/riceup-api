@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\User;
 use App\FarmerProduct;
+use App\ShippingDetail;
 
 use Carbon\Carbon;
 
@@ -93,11 +94,7 @@ class UserController extends Controller
         $user->firstname = $request->firstname;
         $user->middlename = $request->middlename;
         $user->lastname = $request->lastname;
-        $user->address = $request->address;
-        $user->address_lat = $request->address_lat;
-        $user->address_long = $request->address_long;
         $user->business_name = $request->bus_name;
-        $user->mobile_no = $request->mobile_no;
         $user->email = $request->email;
         $user->years_in_business = $request->years_bus;
 
@@ -119,6 +116,15 @@ class UserController extends Controller
         $user->current_long = $request->address_long;
 
         $user->save();
+
+        $shippingDetail = new ShippingDetail();
+        $shippingDetail->user_id = $user->id();
+        $shippingDetail->shipping_address = $request->address;
+        $shippingDetail->address_lat = $request->address_lat;
+        $shippingDetail->address_long = $request->address_long;
+        $shippingDetail->mobile_no = $request->mobile_no;
+
+        $shippingDetail->save();
 
         return response()->json([
             'message' => 'Registered Successfully.'
@@ -188,11 +194,7 @@ class UserController extends Controller
         $user->firstname = $request->firstname;
         $user->middlename = $request->middlename;
         $user->lastname = $request->lastname;
-        $user->address = $request->address;
-        $user->address_lat = $request->address_lat;
-        $user->address_long = $request->address_long;
         $user->business_name = $request->bus_name;
-        $user->mobile_no = $request->mobile_no;
         $user->email = $request->email;
         $user->years_in_business = $request->years_bus;
 
@@ -205,6 +207,16 @@ class UserController extends Controller
         $user->current_long = $request->address_long;
 
         $user->save();
+
+        $shippingDetail = ShippingDetail::where('user_id', Auth::id())
+                            ->first();
+        $shippingDetail->shipping_address = $request->address;
+        $shippingDetail->address_lat = $request->address_lat;
+        $shippingDetail->address_long = $request->address_long;
+        $shippingDetail->mobile_no = $request->mobile_no;
+
+        $shippingDetail->save();
+
 
         return response()->json([
             'message' => 'Profile Updated Successfully.'
@@ -239,7 +251,7 @@ class UserController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => 'Your password is updated successfully.'
+            'message' => 'Your password was updated successfully.'
         ]);
     }
 
@@ -252,5 +264,100 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    /***
+     * Update the specific shipping details of user
+     */
+    public function storeShippingDetail(Request $request)
+    {
+        $shippingDetail = new ShippingDetail();
+
+        $shippingDetail->user_id = Auth::id();
+        $shippingDetail->shipping_address = $request->address;
+        $shippingDetail->address_lat = $request->address_lat;
+        $shippingDetail->address_long = $request->address_long;
+        $shippingDetail->mobile_no = $request->mobile_no;
+
+        $shippingDetail->save();
+
+        return response()->json([
+            'message' => 'Your shipping detail was added successfully.'
+        ]);
+    }
+
+    /***
+     * Update the specific shipping details of user
+     */
+    public function updateShippingDetail(Request $request, $id)
+    {
+        $shippingDetail = ShippingDetail::where('id', $id)
+                            ->where('user_id', Auth::id())
+                            ->first();
+
+        $shippingDetail->shipping_address = $request->address;
+        $shippingDetail->address_lat = $request->address_lat;
+        $shippingDetail->address_long = $request->address_long;
+        $shippingDetail->mobile_no = $request->mobile_no;
+
+        $shippingDetail->save();
+
+        return response()->json([
+            'message' => 'Your shipping detail was updated successfully.'
+        ]);
+    }
+
+    /***
+     * Display shipping details of user
+     */
+    public function destroyShippingDetail($id)
+    {
+        $shippingDetail = ShippingDetail::find($id);
+        $shippingDetail->delete();
+        
+        return response()->json([
+            'message' => 'Shipping detail has beed removed successfully.'
+        ]);
+    }
+
+    /***
+     * Display shipping details of user
+     */
+    public function getShippingDetails()
+    {
+        $shippingDetail = ShippingDetail::where('user_id', Auth::id())
+                            ->get();
+        if($shippingDetail->count() != 0)
+        {
+            return response()->json($shippingDetail);
+        }
+        else
+        {
+            return response()->json([
+                'message' => 'You don\'t have any shipping detail.'
+            ]);
+        }
+    }
+
+    /***
+     * Display shipping details of user
+     */
+    public function getShippingDetail($id)
+    {
+        $shippingDetail = ShippingDetail::where('id', $id)
+                            ->where('user_id', Auth::id())
+                            ->get();
+
+        if($shippingDetail->count() != 0)
+        {
+            return response()->json($shippingDetail);
+        }
+        else
+        {
+            return response()->json([
+                'message' => 'No shipping detail found.'
+            ]);
+        }
     }
 }

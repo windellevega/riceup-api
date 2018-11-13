@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 define('STATUS_PENDING', 0);
 define('STATUS_PACKED', 1);
 define('STATUS_DELIVERED', 2);
-define('STATUS_CANCELLED', 2);
+define('STATUS_CANCELLED', 3);
 
 class ProductOrderController extends Controller
 {
@@ -332,7 +332,7 @@ class ProductOrderController extends Controller
 
                 $cartProdStatus = new CartProductStatus();
                 $cartProdStatus->po_id = $cart->id;
-                $cartProdStatus->product_status = STATUS_PACKED;
+                $cartProdStatus->product_status = STATUS_CANCELLED;
                 $cartProdStatus->details = 'You have cancelled this product';
 
                 $cart->FarmerProduct->save();

@@ -64,6 +64,7 @@ class OrderController extends Controller
 
             $order->order_number = Auth::id() . str_pad(rand(1,999), 3, "0", STR_PAD_LEFT) . date('Ymd'); //@todo: change 2 to Auth::id()
             $order->user_id = Auth::id(); //@todo: change 2 to Auth::id()
+            $order->sd_id = $request->sd_id;
             $order->order_status = 0;
 
             $order->save();
@@ -126,6 +127,7 @@ class OrderController extends Controller
                     ->first();
         $order->order_date = Carbon::now();
         $order->mode_of_shipping = $request->shipping_mode;
+        $order->sd_id = $request->sd_id;
         $order->order_status = $request->order_status;
         $order->remarks = $request->remarks;
 

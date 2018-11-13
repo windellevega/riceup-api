@@ -81,6 +81,31 @@ Route::middleware('auth:api')->patch('/user/changepass', [
     'uses' => 'UserController@changePassword',
 ]);
 
+Route::middleware('auth:api')->post('/shippingdetail', [
+	'as' => 'shipping-detail-add',
+	'uses' => 'UserController@storeShippingDetail'
+]);
+
+Route::middleware('auth:api')->patch('/shippingdetail/{id}', [
+	'as' => 'shipping-detail-update',
+	'uses' => 'UserController@updateShippingDetail'
+]);
+
+Route::middleware('auth:api')->delete('/shippingdetail/{id}', [
+	'as' => 'shipping-detail-delete',
+	'uses' => 'UserController@destroyShippingDetail'
+]);
+
+Route::middleware('auth:api')->get('/shippingdetails', [
+	'as' => 'shipping-details-get',
+	'uses' => 'UserController@getShippingDetails'
+]);
+
+Route::middleware('auth:api')->get('/shippingdetail/{id}', [
+	'as' => 'shipping-detail-get',
+	'uses' => 'UserController@getShippingDetail'
+]);
+
 
 /* 
 ------------------------
