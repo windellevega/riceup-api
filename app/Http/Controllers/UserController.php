@@ -205,19 +205,19 @@ class UserController extends Controller
         $user->is_farmer = $request->is_farmer;
         $user->history = $request->history;
         $user->years_in_farming = $request->years_farm;
-        $user->current_lat = $request->address_lat;
-        $user->current_long = $request->address_long;
+        //$user->current_lat = $request->address_lat;
+        //$user->current_long = $request->address_long;
 
         $user->save();
 
-        $shippingDetail = ShippingDetail::where('user_id', Auth::id())
+        /*$shippingDetail = ShippingDetail::where('user_id', Auth::id())
                             ->first();
         $shippingDetail->shipping_address = $request->address;
         $shippingDetail->address_lat = $request->address_lat;
         $shippingDetail->address_long = $request->address_long;
         $shippingDetail->mobile_no = $request->mobile_no;
 
-        $shippingDetail->save();
+        $shippingDetail->save();*/
 
 
         return response()->json([
