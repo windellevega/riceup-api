@@ -119,7 +119,7 @@ class UserController extends Controller
         $user->save();
 
         $shippingDetail = new ShippingDetail();
-        $shippingDetail->user_id = $user->id();
+        $shippingDetail->user_id = $user->user_id;
         $shippingDetail->shipping_address = $request->address;
         $shippingDetail->address_lat = $request->address_lat;
         $shippingDetail->address_long = $request->address_long;
