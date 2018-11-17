@@ -12,6 +12,7 @@ define('STATUS_PENDING', 0);
 define('STATUS_PACKED', 1);
 define('STATUS_DELIVERED', 2);
 define('STATUS_CANCELLED', 3);
+define('STATUS_RECEIVED', 4);
 
 class ProductOrderController extends Controller
 {
