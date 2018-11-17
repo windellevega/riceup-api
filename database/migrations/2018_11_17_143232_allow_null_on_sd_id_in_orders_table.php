@@ -14,7 +14,7 @@ class AllowNullOnSdIdInOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->unsignedTinyInteger('sd_id')
+            $table->Integer('sd_id')
                     ->nullable()
                     ->change();
         });
@@ -28,7 +28,7 @@ class AllowNullOnSdIdInOrdersTable extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->unsignedTinyInteger('sd_id')
+            $table->Integer('sd_id')
                     ->change();
         });
     }
