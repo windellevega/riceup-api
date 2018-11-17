@@ -17,7 +17,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-        $this->registerPolicies();
         Passport::tokensExpireIn(now()->addDays(1));
         Schema::defaultStringLength(191);
     }
