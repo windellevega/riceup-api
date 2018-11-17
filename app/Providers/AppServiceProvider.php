@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Laravel\Passport\Passport;
 
+use Carbon\Carbon;
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
@@ -17,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-        Passport::tokensExpireIn(now()->addDays(1));
+        Passport::tokensExpireIn(Carbon::now()->addDays(1));
         Schema::defaultStringLength(191);
     }
 
