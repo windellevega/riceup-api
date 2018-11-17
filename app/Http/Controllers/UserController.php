@@ -94,6 +94,7 @@ class UserController extends Controller
         $user->firstname = $request->firstname;
         $user->middlename = $request->middlename;
         $user->lastname = $request->lastname;
+        $user->address = "";
         $user->business_name = $request->bus_name;
         $user->email = $request->email;
         $user->years_in_business = $request->years_bus;
