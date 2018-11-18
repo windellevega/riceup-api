@@ -175,6 +175,11 @@ Route::middleware('auth:api')->get('/fordispatch', [
 	'uses' => 'ProductOrderController@displayProductsForDispatch'
 ]);
 
+Route::middleware('auth:api')->get('/ordersperfarmer/{status?}', [
+	'as' => 'orders-perfarmer',
+	'uses' => 'ProductOrderController@displayProductOrdersPerFarmer'
+]);
+
 //Dispatch product
 Route::middleware('auth:api')->patch('/product/dispatch/{id}', [
 	'as' => 'product-dispatch',

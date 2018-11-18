@@ -115,7 +115,7 @@ class ProductOrderController extends Controller
         $cart = ProductOrder::with('FarmerProduct')
                 ->with('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
-                    $q->where('user_id', 2);
+                    $q->where('user_id', Auth::id());
                 })
                 ->whereHas('Order', function($q) {
                     $q->where('order_status', 1);
@@ -223,10 +223,7 @@ class ProductOrderController extends Controller
         $cart = ProductOrder::with('FarmerProduct')
                 ->with('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
-                    $q->where('user_id', 2);
-                })
-                ->whereHas('Order', function($q) {
-                    $q->where('order_status', 1);
+                    $q->where('user_id', Auth::id());
                 })
                 ->get();
         $withPending = $cart->where('currentStatus.product_status', STATUS_PENDING);
@@ -345,6 +342,33 @@ class ProductOrderController extends Controller
         else {
             return response()->json([
                 'message' => "Unable to cancel. Product is already out for delivery."
+            ]);
+        }
+    }
+    public function displayProductOrdersPerFarmer($status = -1)
+    {
+        $cart = ProductOrder::with('FarmerProduct')
+                ->with('currentStatus')
+                ->whereHas('FarmerProduct', function($q) {
+                    $q->where('user_id', Auth::id());
+                })
+                ->whereHas('Order', function($q) {
+                    $q->where('order_status', 1);
+                })
+                ->get();
+        if($status >= 0) 
+        {
+            $cart = $cart->where('currentStatus.product_status', $status);
+        }
+        $cart->load('FarmerProduct');
+        $cart->load('Order.User');
+
+        if($cart->count()) {
+            return response()->json($cart);
+        }
+        else {
+            return response()->json([
+                'message' => "There are no items."
             ]);
         }
     }
