@@ -347,7 +347,7 @@ class ProductOrderController extends Controller
     public function displayProductOrdersPerFarmer($status = -1)
     {
         $cart = ProductOrder::with('FarmerProduct')
-                ->with('currentStatus')
+                ->has('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
                 })
