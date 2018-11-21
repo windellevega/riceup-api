@@ -355,16 +355,15 @@ class ProductOrderController extends Controller
                     $q->where('order_status', 1);
                 })
                 ->get();
-        $cart->load('FarmerProduct');
-        $cart->load('Order.User');
         if($status >= 0) 
         {
-            $cart = $cart->where('currentStatus.product_status', $status)->all();
+            $cart = $cart->where('currentStatus.product_status', $status);
         }
-        
+        $cart->load('FarmerProduct');
+        $cart->load('Order.User');
 
         if($cart->count()) {
-            return response()->json($cart);
+            return response()->json($cart->toArray());
         }
         else {
             return response()->json([
