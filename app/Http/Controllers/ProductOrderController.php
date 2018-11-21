@@ -357,7 +357,7 @@ class ProductOrderController extends Controller
                 ->get();
         if($status >= 0) 
         {
-            $cart = $cart->where('currentStatus.product_status', $status)->get();
+            $cart = $cart->where('currentStatus.product_status', $status)->all();
         }
         $cart->load('FarmerProduct');
         $cart->load('Order.User');
