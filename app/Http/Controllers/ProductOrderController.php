@@ -325,7 +325,6 @@ class ProductOrderController extends Controller
                 ->first();
         //return response()->json($cart->id);
         if($cart->currentStatus->product_status == STATUS_PENDING) {
-                $cart->FarmerProduct->stocks_available += $cart->quantity;
                 $cart->FarmerProduct->reserved -= $cart->quantity;
 
                 $cartProdStatus = new CartProductStatus();
