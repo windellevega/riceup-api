@@ -243,9 +243,15 @@ class UserController extends Controller
         }
 
         $user = User::find(Auth::id());
-        if(Hash::make($request->oldpassword) != $user->password) {
+        if(!Hash::check($request->oldpassword, $user->password)) {
             return response()->json([
                 'message' => 'Old password is invalid.'
+            ]);
+        }
+
+        if(Hash::check($request->newpassword, $user->password)) {
+            return response()->json([
+                'message' => 'New password should not be the same as old password.'
             ]);
         }
 

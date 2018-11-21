@@ -23,6 +23,7 @@ class OrderController extends Controller
                     ->orderBy('id', 'desc')
                     ->get();
         $order->load('ProductOrder');
+        $order->load('ProductOrder.currentStatus');
 
         if($order->count() != 0) {
             return response()->json($order);
@@ -88,6 +89,7 @@ class OrderController extends Controller
                     ->where('user_id', Auth::id())
                     ->first();
         $order->load('ProductOrder');
+        $order->load('ProductOrder.currentStatus');
         $order->load('ProductOrder.FarmerProduct.User');
 
         if($order->count() != 0) {

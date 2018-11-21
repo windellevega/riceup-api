@@ -194,6 +194,6 @@ Route::middleware('auth:api')->patch('/product/pack/{id}', [
 
 //Cancell product
 Route::middleware('auth:api')->patch('/product/cancel/{id}', [
-	'as' => 'product-pack',
+	'as' => 'product-cancel',
 	'uses' => 'ProductOrderController@cancelProduct'
 ]);

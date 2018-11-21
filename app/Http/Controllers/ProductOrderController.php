@@ -364,7 +364,7 @@ class ProductOrderController extends Controller
         $cart->load('Order.User');
 
         if($cart->count()) {
-            return response()->json($cart);
+            return response()->json($cart->toArray());
         }
         else {
             return response()->json([
