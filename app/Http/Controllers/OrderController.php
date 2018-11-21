@@ -23,6 +23,7 @@ class OrderController extends Controller
                     ->orderBy('id', 'desc')
                     ->get();
         $order->load('ProductOrder');
+        $order->load('ProductOrder.FarmerProduct.User');
         $order->load('ProductOrder.currentStatus');
 
         if($order->count() != 0) {
