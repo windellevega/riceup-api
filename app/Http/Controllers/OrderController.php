@@ -89,7 +89,6 @@ class OrderController extends Controller
         $order = Order::where('id', $id)
                     ->where('user_id', Auth::id())
                     ->first();
-        $order->load('ProductOrder');
         $order->load('ProductOrder.currentStatus');
         $order->load('ProductOrder.FarmerProduct.User');
 
