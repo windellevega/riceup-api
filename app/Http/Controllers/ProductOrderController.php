@@ -222,6 +222,7 @@ class ProductOrderController extends Controller
         }*/
         $cart = ProductOrder::with('FarmerProduct')
                 ->has('currentStatus')
+                ->with('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
                 })
@@ -244,6 +245,7 @@ class ProductOrderController extends Controller
     {
         $cart = ProductOrder::with('FarmerProduct')
                 ->has('currentStatus')
+                ->with('currentStatus')
                 ->where('id', $id)
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
@@ -284,6 +286,7 @@ class ProductOrderController extends Controller
     {
         $cart = ProductOrder::with('FarmerProduct')
                 ->has('currentStatus')
+                ->with('currentStatus')
                 ->where('id', $id)
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
@@ -320,6 +323,7 @@ class ProductOrderController extends Controller
     {
         $cart = ProductOrder::with('FarmerProduct')
                 ->has('currentStatus')
+                ->with('currentStatus')
                 ->where('id', $id)
                 ->whereHas('FarmerProduct')
                 ->first();
@@ -348,6 +352,7 @@ class ProductOrderController extends Controller
     {
         $cart = ProductOrder::with('FarmerProduct')
                 ->has('currentStatus')
+                ->with('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
                 })
