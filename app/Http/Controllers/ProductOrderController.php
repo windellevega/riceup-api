@@ -113,7 +113,7 @@ class ProductOrderController extends Controller
         }*/
 
         $cart = ProductOrder::with('FarmerProduct')
-                ->with('currentStatus')
+                ->has('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
                 })
@@ -221,7 +221,7 @@ class ProductOrderController extends Controller
             ]);
         }*/
         $cart = ProductOrder::with('FarmerProduct')
-                ->with('currentStatus')
+                ->has('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
                 })
@@ -243,7 +243,7 @@ class ProductOrderController extends Controller
     public function dispatchProduct($id)
     {
         $cart = ProductOrder::with('FarmerProduct')
-                ->with('currentStatus')
+                ->has('currentStatus')
                 ->where('id', $id)
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
@@ -283,7 +283,7 @@ class ProductOrderController extends Controller
     public function packProduct($id)
     {
         $cart = ProductOrder::with('FarmerProduct')
-                ->with('currentStatus')
+                ->has('currentStatus')
                 ->where('id', $id)
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
@@ -319,7 +319,7 @@ class ProductOrderController extends Controller
     public function cancelProduct($id)
     {
         $cart = ProductOrder::with('FarmerProduct')
-                ->with('currentStatus')
+                ->has('currentStatus')
                 ->where('id', $id)
                 ->whereHas('FarmerProduct')
                 ->first();
