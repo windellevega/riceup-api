@@ -7,6 +7,7 @@ use App\ProductOrder;
 use App\FarmerProduct;
 use App\CartProductStatus;
 use App\ShippingDetail;
+use App\Order;
 use Illuminate\Support\Facades\Auth;
 
 define('STATUS_PENDING', 0);
@@ -61,6 +62,7 @@ class ProductOrderController extends Controller
                     
         if($cart) {
             $cart->quantity = $cart->quantity + $request->qty;
+            $cart->save();
         }
         else {
             $cart = new ProductOrder();
@@ -68,17 +70,23 @@ class ProductOrderController extends Controller
             $cart->order_id = $request->orderid;
             $cart->fp_id = $request->productid;
             $cart->quantity = $request->qty;
+
+            $cart->save();
+
+            $cartprodstatus = new CartProductStatus();
+            $cartprodstatus->po_id = $cart->id;
+            $cartprodstatus->product_status = STATUS_PENDING;
+            $cartprodstatus->details = "Product is being processed.";
+            $cartprodstatus->save();
+
+            $order = Order::find($request->orderid);
+            $order->products_ctr++;
+            $order->save();
         }
 
         $product->reserved += $request->qty;
+        
         $product->save();
-        $cart->save();
-
-        $cartprodstatus = new CartProductStatus();
-        $cartprodstatus->po_id = $cart->id;
-        $cartprodstatus->product_status = STATUS_PENDING;
-        $cartprodstatus->details = "Product is being processed.";
-        $cartprodstatus->save();
 
         return response()->json([
             'message' => 'Product successfully added to cart.'
@@ -192,6 +200,11 @@ class ProductOrderController extends Controller
 
         $product->reserved = $product->reserved - $cart->quantity;
 
+        $order = Order::find($cart->order_id);
+        $order->products_ctr--;
+
+        $order->save();
+
         $product->save();
         $cart->delete();
 
@@ -262,6 +275,16 @@ class ProductOrderController extends Controller
                 $cartProdStatus->po_id = $cart->id;
                 $cartProdStatus->product_status = STATUS_DELIVERED;
                 $cartProdStatus->details = 'Your product has been delivered';
+
+                $order = Order::find($cart->order_id);
+                $order->products_ctr--;
+
+                if($order->products_ctr <= 0)
+                {
+                    $order->order_status = 2;
+                }
+
+                $order->save();
 
                 $cart->save();
                 $cart->FarmerProduct->save();
@@ -337,6 +360,16 @@ class ProductOrderController extends Controller
                 $cartProdStatus->po_id = $cart->id;
                 $cartProdStatus->product_status = STATUS_CANCELLED;
                 $cartProdStatus->details = 'You have cancelled this product';
+
+                $order = Order::find($cart->order_id);
+                $order->products_ctr--;
+
+                if($order->products_ctr <= 0)
+                {
+                    $order->order_status = 2;
+                }
+
+                $order->save();
 
                 $cart->FarmerProduct->save();
                 $cartProdStatus->save();
