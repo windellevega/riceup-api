@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\ProductOrder;
 use App\FarmerProduct;
 use App\CartProductStatus;
+use App\ShippingDetail;
 use Illuminate\Support\Facades\Auth;
 
 define('STATUS_PENDING', 0);
@@ -371,7 +372,7 @@ class ProductOrderController extends Controller
             $cart = $cart->where('currentStatus.product_status', $status);
         }
         $cart->load('FarmerProduct');
-        $cart->load('Order.User');
+        $cart->load('Order.User', 'Order.ShippingDetail');
 
         if($cart->count()) {
             return response()->json($cart);

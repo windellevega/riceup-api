@@ -22,4 +22,12 @@ class ShippingDetail extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    /**
+    * Shipping Details that has Order
+    **/
+    public function Order()
+    {
+        return $this->has('App\Order');
+    }
 }
