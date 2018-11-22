@@ -343,6 +343,11 @@ class ProductOrderController extends Controller
                     'message' => "Product has been cancelled."
                 ]);  
         }
+        else if($cart->currentStatus->product_status == STATUS_CANCELLED){
+            return response()->json([
+                'message' => "This product has already been cancelled."
+            ]);
+        }
         else {
             return response()->json([
                 'message' => "Unable to cancel. Product is already out for delivery."
