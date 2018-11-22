@@ -302,6 +302,7 @@ class ProductOrderController extends Controller
                 $cartProdStatus->details = 'Your product has been packed';
 
                 $cart->save();
+                $cartProdStatus->save();
                 return response()->json([
                     'message' => "Product has been packed."
                 ]);
