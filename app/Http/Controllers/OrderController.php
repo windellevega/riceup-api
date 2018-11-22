@@ -67,7 +67,7 @@ class OrderController extends Controller
             $order->order_number = Auth::id() . str_pad(rand(1,999), 3, "0", STR_PAD_LEFT) . date('Ymd'); //@todo: change 2 to Auth::id()
             $order->user_id = Auth::id(); //@todo: change 2 to Auth::id()
             $order->order_status = 0;
-            $order->product_ctr = 0;
+            $order->products_ctr = 0;
 
             $order->save();
 
