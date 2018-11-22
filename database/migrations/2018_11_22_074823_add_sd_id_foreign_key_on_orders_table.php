@@ -16,9 +16,6 @@ class AddSdIdForeignKeyOnOrdersTable extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->unsignedInteger('sd_id')
                     ->change();
-            $table->foreign('sd_id')
-                    ->references('id')
-                    ->on('shipping_details');
         });
     }
 
@@ -30,7 +27,8 @@ class AddSdIdForeignKeyOnOrdersTable extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropForeign('sd_id');
+            $table->integer('sd_id')
+                    ->change();
         });
     }
 }
