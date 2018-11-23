@@ -91,7 +91,7 @@ class OrderController extends Controller
         $order = Order::where('id', $id)
                     ->where('user_id', Auth::id())
                     ->first();
-        $order->load('ProductOrder.currentStatus','ProductOrder.FarmerProduct.User');
+        $order->load('ProductOrder.currentStatus','ProductOrder.FarmerProduct.User.firstShippingDetail');
         $order->load('ShippingDetail');
 
         if($order->count() != 0) {

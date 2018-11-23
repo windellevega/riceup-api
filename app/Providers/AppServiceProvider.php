@@ -19,7 +19,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-        Passport::tokensExpireIn(Carbon::now()->addDays(1));
         Schema::defaultStringLength(191);
     }
 
