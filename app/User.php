@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\ShippingDetail');
     }
+
+    public function firstShippingDetail()
+    {
+        return $this->hasOne('App\ShippingDetail')->oldest();
+    }
 }

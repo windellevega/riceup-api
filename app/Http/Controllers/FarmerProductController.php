@@ -21,12 +21,12 @@ class FarmerProductController extends Controller
     {
         if($id == 'all') {
             $products = FarmerProduct::all();
-            $products->load('User');
+            $products->load('User.firstShippingDetail');
         }
         else {
             $products = FarmerProduct::where('user_id', $id)
                             ->get();
-            $products->load('User');
+            $products->load('User.firstShippingDetail');
         }
 
         if($products->count() <= 0) {
