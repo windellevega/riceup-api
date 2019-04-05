@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\ProductOrder;
 use App\FarmerProduct;
 use App\CartProductStatus;
+use App\ShippingDetail;
+use App\Order;
 use Illuminate\Support\Facades\Auth;
 
 define('STATUS_PENDING', 0);
@@ -60,6 +62,7 @@ class ProductOrderController extends Controller
                     
         if($cart) {
             $cart->quantity = $cart->quantity + $request->qty;
+            $cart->save();
         }
         else {
             $cart = new ProductOrder();
@@ -67,17 +70,23 @@ class ProductOrderController extends Controller
             $cart->order_id = $request->orderid;
             $cart->fp_id = $request->productid;
             $cart->quantity = $request->qty;
+
+            $cart->save();
+
+            $cartprodstatus = new CartProductStatus();
+            $cartprodstatus->po_id = $cart->id;
+            $cartprodstatus->product_status = STATUS_PENDING;
+            $cartprodstatus->details = "Product is being processed.";
+            $cartprodstatus->save();
+
+            $order = Order::find($request->orderid);
+            $order->products_ctr++;
+            $order->save();
         }
 
         $product->reserved += $request->qty;
+        
         $product->save();
-        $cart->save();
-
-        $cartprodstatus = new CartProductStatus();
-        $cartprodstatus->po_id = $cart->id;
-        $cartprodstatus->product_status = STATUS_PENDING;
-        $cartprodstatus->details = "Product is being processed.";
-        $cartprodstatus->save();
 
         return response()->json([
             'message' => 'Product successfully added to cart.'
@@ -113,7 +122,7 @@ class ProductOrderController extends Controller
         }*/
 
         $cart = ProductOrder::with('FarmerProduct')
-                ->with('currentStatus')
+                ->has('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
                 })
@@ -191,6 +200,11 @@ class ProductOrderController extends Controller
 
         $product->reserved = $product->reserved - $cart->quantity;
 
+        $order = Order::find($cart->order_id);
+        $order->products_ctr--;
+
+        $order->save();
+
         $product->save();
         $cart->delete();
 
@@ -221,6 +235,7 @@ class ProductOrderController extends Controller
             ]);
         }*/
         $cart = ProductOrder::with('FarmerProduct')
+                ->has('currentStatus')
                 ->with('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
@@ -243,6 +258,7 @@ class ProductOrderController extends Controller
     public function dispatchProduct($id)
     {
         $cart = ProductOrder::with('FarmerProduct')
+                ->has('currentStatus')
                 ->with('currentStatus')
                 ->where('id', $id)
                 ->whereHas('FarmerProduct', function($q) {
@@ -259,6 +275,16 @@ class ProductOrderController extends Controller
                 $cartProdStatus->po_id = $cart->id;
                 $cartProdStatus->product_status = STATUS_DELIVERED;
                 $cartProdStatus->details = 'Your product has been delivered';
+
+                $order = Order::find($cart->order_id);
+                $order->products_ctr--;
+
+                if($order->products_ctr <= 0)
+                {
+                    $order->order_status = 2;
+                }
+
+                $order->save();
 
                 $cart->save();
                 $cart->FarmerProduct->save();
@@ -283,6 +309,7 @@ class ProductOrderController extends Controller
     public function packProduct($id)
     {
         $cart = ProductOrder::with('FarmerProduct')
+                ->has('currentStatus')
                 ->with('currentStatus')
                 ->where('id', $id)
                 ->whereHas('FarmerProduct', function($q) {
@@ -299,6 +326,7 @@ class ProductOrderController extends Controller
                 $cartProdStatus->details = 'Your product has been packed';
 
                 $cart->save();
+                $cartProdStatus->save();
                 return response()->json([
                     'message' => "Product has been packed."
                 ]);
@@ -319,6 +347,7 @@ class ProductOrderController extends Controller
     public function cancelProduct($id)
     {
         $cart = ProductOrder::with('FarmerProduct')
+                ->has('currentStatus')
                 ->with('currentStatus')
                 ->where('id', $id)
                 ->whereHas('FarmerProduct')
@@ -332,11 +361,26 @@ class ProductOrderController extends Controller
                 $cartProdStatus->product_status = STATUS_CANCELLED;
                 $cartProdStatus->details = 'You have cancelled this product';
 
+                $order = Order::find($cart->order_id);
+                $order->products_ctr--;
+
+                if($order->products_ctr <= 0)
+                {
+                    $order->order_status = 2;
+                }
+
+                $order->save();
+
                 $cart->FarmerProduct->save();
                 $cartProdStatus->save();
                 return response()->json([
                     'message' => "Product has been cancelled."
                 ]);  
+        }
+        else if($cart->currentStatus->product_status == STATUS_CANCELLED){
+            return response()->json([
+                'message' => "This product has already been cancelled."
+            ]);
         }
         else {
             return response()->json([
@@ -347,12 +391,10 @@ class ProductOrderController extends Controller
     public function displayProductOrdersPerFarmer($status = -1)
     {
         $cart = ProductOrder::with('FarmerProduct')
+                ->has('currentStatus')
                 ->with('currentStatus')
                 ->whereHas('FarmerProduct', function($q) {
                     $q->where('user_id', Auth::id());
-                })
-                ->whereHas('Order', function($q) {
-                    $q->where('order_status', 1);
                 })
                 ->get();
         if($status >= 0) 
@@ -360,7 +402,7 @@ class ProductOrderController extends Controller
             $cart = $cart->where('currentStatus.product_status', $status);
         }
         $cart->load('FarmerProduct');
-        $cart->load('Order.User');
+        $cart->load('Order.User', 'Order.ShippingDetail');
 
         if($cart->count()) {
             return response()->json($cart);

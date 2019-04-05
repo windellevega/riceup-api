@@ -26,19 +26,22 @@ class UserController extends Controller
         // TODO: Add number of products to the response
         
         if($type == 'all') {
-            $users = User::all();
+            $users = User::with('firstShippingDetail')
+                        ->get();
         }
         else if($type == 'farmer') {
             /*$users = User::where('is_farmer', 1)
                         ->get();
             $users->count('FarmerProduct');*/
-            $users = User::with('productsCount')
-                        ->where('is_farmer', 1)
+            $users = User::where('is_farmer', 1)
+                        ->with('productsCount')
+                        ->with('firstShippingDetail')
                         ->get();
             //$users->productsCount;
         }
         else if($type == 'consumer') {
             $users = User::where('is_farmer', 0)
+                        ->with('firstShippingDetail')
                         ->get();
         }
         else {

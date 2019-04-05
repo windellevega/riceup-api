@@ -23,6 +23,7 @@ class OrderController extends Controller
                     ->orderBy('id', 'desc')
                     ->get();
         $order->load('ProductOrder');
+        $order->load('ShippingDetail');
         $order->load('ProductOrder.FarmerProduct.User');
         $order->load('ProductOrder.currentStatus');
 
@@ -67,6 +68,7 @@ class OrderController extends Controller
             $order->order_number = Auth::id() . str_pad(rand(1,999), 3, "0", STR_PAD_LEFT) . date('Ymd'); //@todo: change 2 to Auth::id()
             $order->user_id = Auth::id(); //@todo: change 2 to Auth::id()
             $order->order_status = 0;
+            $order->products_ctr = 0;
 
             $order->save();
 
@@ -89,7 +91,8 @@ class OrderController extends Controller
         $order = Order::where('id', $id)
                     ->where('user_id', Auth::id())
                     ->first();
-        $order->load('ProductOrder.currentStatus','ProductOrder.FarmerProduct.User');
+        $order->load('ProductOrder.currentStatus','ProductOrder.FarmerProduct.User.firstShippingDetail');
+        $order->load('ShippingDetail');
 
         if($order->count() != 0) {
             return response()->json($order);

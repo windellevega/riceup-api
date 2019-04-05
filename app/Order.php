@@ -12,7 +12,7 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'order_date', 'delivery_date',
+        'user_id', 'order_date', 'delivery_date', 'sd_id',
         'mode_of_shipping', 'order_status', 'order_number',
     ];
 
@@ -30,6 +30,14 @@ class Order extends Model
     public function User()
     {
         return $this->belongsTo('App\User');
+    }
+
+    /**
+    * User that has ShippingDetail
+    **/
+    public function ShippingDetail()
+    {
+        return $this->belongsTo('App\ShippingDetail', 'sd_id');
     }
 
     /**
