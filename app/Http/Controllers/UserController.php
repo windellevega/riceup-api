@@ -205,6 +205,8 @@ class UserController extends Controller
         $user->is_farmer = $request->is_farmer;
         $user->history = $request->history;
         $user->years_in_farming = $request->years_farm;
+        $user->address_lat = $request->address_lat;
+        $user->address_long = $request->address_long;
         //$user->current_lat = $request->address_lat;
         //$user->current_long = $request->address_long;
 
