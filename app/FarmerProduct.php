@@ -21,6 +21,8 @@ class FarmerProduct extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $casts = ['price_per_unit' => 'float'];
+
     /**
     * FarmerProduct that is in ProductOrder
     **/
