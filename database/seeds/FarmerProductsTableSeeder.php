@@ -20,7 +20,8 @@ class FarmerProductsTableSeeder extends Seeder
 	        	'unit_type' => 'bundle',
 	        	'price_per_unit' => 500.50,
 	        	'stocks_available' => 500,
-	        	'date_of_harvest' => '2017-05-20'
+				'date_of_harvest' => '2017-05-20',
+				'reserved' => 0
 	        ],
 	        [
 	        	'user_id' => 2,
@@ -30,7 +31,8 @@ class FarmerProductsTableSeeder extends Seeder
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 3000,
 	        	'stocks_available' => 20,
-	        	'date_of_harvest' => '2017-06-01'
+	        	'date_of_harvest' => '2017-06-01',
+				'reserved' => 0
 	        ],
 	        [
 	        	'user_id' => 2,
@@ -40,7 +42,8 @@ class FarmerProductsTableSeeder extends Seeder
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 4200.25,
 	        	'stocks_available' => 10,
-	        	'date_of_harvest' => '2017-06-01'
+	        	'date_of_harvest' => '2017-06-01',
+				'reserved' => 0
 	        ],
 	        [
 	        	'user_id' => 3,
@@ -50,7 +53,8 @@ class FarmerProductsTableSeeder extends Seeder
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 3500.12,
 	        	'stocks_available' => 15,
-	        	'date_of_harvest' => '2017-06-01'
+	        	'date_of_harvest' => '2017-06-01',
+				'reserved' => 0
 	        ],
 	        [
 	        	'user_id' => 3,
@@ -60,7 +64,8 @@ class FarmerProductsTableSeeder extends Seeder
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 5100.25,
 	        	'stocks_available' => 10,
-	        	'date_of_harvest' => '2017-06-01'
+	        	'date_of_harvest' => '2017-06-01',
+				'reserved' => 0
 	        ],
 	        [
 	        	'user_id' => 3,
@@ -70,7 +75,8 @@ class FarmerProductsTableSeeder extends Seeder
 	        	'unit_type' => 'sack',
 	        	'price_per_unit' => 4300.25,
 	        	'stocks_available' => 10,
-	        	'date_of_harvest' => '2017-06-01'
+	        	'date_of_harvest' => '2017-06-01',
+				'reserved' => 0
 	        ]
 	    ];
         DB::table('farmer_products')->insert($farmerproducts);
