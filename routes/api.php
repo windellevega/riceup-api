@@ -1,6 +1,18 @@
 <?php
-
-use Illuminate\Http\Request;
+/*
+--------------------------
+ACCOUNT ROUTES
+--------------------------
+*/
+Route::group([    
+    'namespace' => 'Auth',    
+    'middleware' => 'api',    
+    'prefix' => 'password'
+], function () {    
+    Route::post('forgot', 'PasswordResetController@create');
+    Route::get('find/{token}', 'PasswordResetController@find');
+    Route::post('reset', 'PasswordResetController@reset');
+});
 
 /*
 --------------------------
