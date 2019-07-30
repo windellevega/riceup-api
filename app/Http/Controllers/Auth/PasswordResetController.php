@@ -19,9 +19,14 @@ class PasswordResetController extends Controller
      */
     public function create(Request $request)
     {
-        $request->validate([
+        $validator = \Validator::make($request->all(), [
             'email' => 'required|string|email',
         ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+        
         $user = User::where('email', $request->email)->first();
         if (!$user)
             return response()->json([
@@ -77,11 +82,16 @@ class PasswordResetController extends Controller
      */
     public function reset(Request $request)
     {
-        $request->validate([
+        $validator = \Validator::make($request->all(), [
             'email' => 'required|string|email',
             'password' => 'required|string|confirmed',
             'token' => 'required|string'
         ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
         $passwordReset = PasswordReset::where([
             ['token', $request->token],
             ['email', $request->email]
