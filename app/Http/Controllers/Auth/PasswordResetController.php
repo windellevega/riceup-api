@@ -44,7 +44,7 @@ class PasswordResetController extends Controller
                 new PasswordResetRequest($passwordReset->token)
             );
         return response()->json([
-            'message' => 'We have e-mailed your password reset code!'
+            'message' => 'We have e-mailed your password reset verification code.'
         ]);
     }
     /**
