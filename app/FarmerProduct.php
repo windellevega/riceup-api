@@ -38,4 +38,17 @@ class FarmerProduct extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    /**
+    * FarmerProduct has a Category
+    **/
+    public function FarmerProductCategory()
+    {
+        return $this->belongsTo('App\FarmerProductCategory', 'fp_category_id');
+    }
+
+    public function FavoritedBy()
+    {
+        return $this->belongsToMany('App\User', 'favorite_products', 'fp_id', 'user_id');
+    }
 }

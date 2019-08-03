@@ -72,4 +72,21 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\ShippingDetail')->oldest();
     }
+
+    public function FavoriteFarmers()
+    {
+        return $this->belongsToMany('App\User', 'favorite_users', 'user_id', 'favorite_user_id')
+                ->withTimestamps();
+    }
+
+    public function FavoriteProducts()
+    {
+        return $this->belongsToMany('App\FarmerProduct', 'favorite_products', 'user_id', 'fp_id')
+                ->withTimestamps();
+    }
+
+    public function FavoritedBy()
+    {
+        return $this->belongsToMany('App\User', 'favorite_users', 'favorite_user_id', 'user_id');
+    }
 }

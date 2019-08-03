@@ -130,6 +130,7 @@ class OrderController extends Controller
                     ->first();
         $order->order_date = Carbon::now();
         $order->mode_of_shipping = $request->shipping_mode;
+        $order->delivery_date = $request->delivery_date;
         $order->order_status = $request->order_status;
         $order->sd_id = $request->sd_id;
         $order->remarks = $request->remarks;

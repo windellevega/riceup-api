@@ -6,9 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\FarmerProduct;
-use App\User;
 
-use Carbon\Carbon;
+//Product Category constants
+define('ALL_TYPES', 0);
+define('FRUITS', 1);
+define('VEGETABLES', 2);
+define('GRAINS', 3);
+define('HERBS', 4);
+define('BUNDLES', 5);
 
 class FarmerProductController extends Controller
 {
@@ -17,16 +22,44 @@ class FarmerProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id='all')
+    public function index($id = 'all')
     {
         if($id == 'all') {
             $products = FarmerProduct::all();
             $products->load('User.firstShippingDetail');
+            $products->load('FarmerProductCategory');
         }
         else {
             $products = FarmerProduct::where('user_id', $id)
                             ->get();
             $products->load('User.firstShippingDetail');
+            $products->load('FarmerProductCategory');
+        }
+
+        if($products->count() <= 0) {
+            return response()->json([
+                'message' => 'No products are found!'
+            ]);
+        }        
+        
+        return response()->json($products);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function productsByCategory($id = ALL_TYPES)
+    {
+        if($id == ALL_TYPES) {
+            $products = FarmerProduct::all();
+            $products->load('FarmerProductCategory');
+        }
+        else {
+            $products = FarmerProduct::where('fp_category_id', $id)
+                            ->get();
+            $products->load('FarmerProductCategory');
         }
 
         if($products->count() <= 0) {
@@ -62,7 +95,8 @@ class FarmerProductController extends Controller
             'unit' => 'required',
             'price' => 'required|numeric',
             'stocks' => 'required|numeric',
-            'harvest_date' => 'required|date'
+            'harvest_date' => 'required|date',
+            'fp_category_id' => 'numeric'
         ]);
 
         if($validator->fails()) {
@@ -90,6 +124,7 @@ class FarmerProductController extends Controller
         $product->stocks_available = $request->stocks;
         $product->reserved = 0;
         $product->date_of_harvest = $request->harvest_date;
+        $product->fp_category_id = isset($request->fp_category_id) ? $request->fp_category_id : null;
 
         
 
@@ -111,6 +146,9 @@ class FarmerProductController extends Controller
         $product = FarmerProduct::where('id', $id)
                         ->get();
         if($product->count() <= 0) {
+            $product->load('User.firstShippingDetail');
+            $product->load('FarmerProductCategory');
+
             return response()->json([
                 'message' => 'No product found.'
             ]);
@@ -144,7 +182,8 @@ class FarmerProductController extends Controller
             'unit' => 'required',
             'price' => 'required|numeric',
             'stocks' => 'required|numeric',
-            'harvest_date' => 'required|date'
+            'harvest_date' => 'required|date',
+            'fp_category_id' => 'numeric'
         ]);
 
         if($validator->fails()) {
@@ -172,6 +211,7 @@ class FarmerProductController extends Controller
         $product->price_per_unit = $request->price;
         $product->stocks_available = $request->stocks;
         $product->date_of_harvest = $request->harvest_date;
+        $product->fp_category_id = isset($request->fp_category_id) ? $request->fp_category_id : null;
 
         $product->save();
 
@@ -201,5 +241,17 @@ class FarmerProductController extends Controller
                 'message' => 'Either product doesn\'t exist or you are unauthorized to delete this product.'
             ]);
         }        
+    }
+
+    public function getFavoritedBy($id)
+    {
+        $favoritedBy = FarmerProduct::find($id)->FavoritedBy;
+
+        if($favoritedBy->count() <= 0){
+            return response()->json([
+                'message' => 'No users found.'
+            ]);
+        }
+        return response()->json($favoritedBy);
     }
 }

@@ -373,4 +373,145 @@ class UserController extends Controller
             ]);
         }
     }
+
+    public function getFavoriteProducts()
+    {
+        $favoriteProducts = User::find(Auth::id())->FavoriteProducts;
+
+        if($favoriteProducts->count() <= 0){
+            return response()->json([
+                'message' => 'No products found.'
+            ]);
+        }
+        return response()->json($favoriteProducts);
+    }
+
+    public function addFavoriteProduct(Request $request)
+    {
+        $user = User::find(Auth::id());
+
+        $checkExists = FarmerProduct::find($request->fp_id);
+
+        if(!$checkExists) {
+            return response()->json([
+                'message' => 'Product does not exist.'
+            ]);
+        }
+
+        $checkExists = $user->FavoriteProducts()
+                        ->wherePivot('fp_id', $request->fp_id)
+                        ->get();
+
+        if($checkExists->count() > 0) {
+            return response()->json([
+                'message' => 'Product is already in favorites list.'
+            ]);
+        }
+
+        $user->FavoriteProducts()
+                ->attach($request->fp_id);
+
+        return response()->json([
+            'message' => 'Product added in favorites.'
+        ]);
+    }
+
+    public function deleteFavoriteProduct($id)
+    {
+        $user = User::find(Auth::id());
+
+        $checkExists = $user->FavoriteProducts()
+                        ->wherePivot('fp_id', $id)
+                        ->get();
+
+        if($checkExists->count() <= 0) {
+            return response()->json([
+                'message' => 'Product is not in favorites list.'
+            ]);
+        }
+
+        $user->FavoriteProducts()
+                ->detach($id);
+
+        return response()->json([
+            'message' => 'Product removed from favorites.'
+        ]);
+    }
+    
+
+    public function getFavoriteFarmers()
+    {
+        $favoriteFarmers = User::find(Auth::id())->FavoriteFarmers;
+
+        if($favoriteFarmers->count() <= 0){
+            return response()->json([
+                'message' => 'No farmers found.'
+            ]);
+        }
+        return response()->json($favoriteFarmers);
+    }
+
+    public function addFavoriteFarmer(Request $request)
+    {
+        $user = User::find(Auth::id());
+
+        $checkExists = User::find($request->user_id);
+
+        if(!$checkExists) {
+            return response()->json([
+                'message' => 'User does not exist.'
+            ]);
+        }
+
+        $checkExists = $user->FavoriteFarmers()
+                        ->wherePivot('favorite_user_id', $request->user_id)
+                        ->get();
+
+        if($checkExists->count() > 0) {
+            return response()->json([
+                'message' => 'Farmer is already in favorites list.'
+            ]);
+        }
+
+        $user->FavoriteFarmers()
+                ->attach($request->user_id);
+
+        return response()->json([
+            'message' => 'Farmer added in favorites.'
+        ]);
+    }
+
+    public function deleteFavoriteFarmer($id)
+    {
+        $user = User::find(Auth::id());
+
+        $checkExists = $user->FavoriteFarmers()
+                        ->wherePivot('favorite_user_id', $id)
+                        ->get();
+
+        if($checkExists->count() <= 0) {
+            return response()->json([
+                'message' => 'Farmer is not in favorites list.'
+            ]);
+        }
+
+        $user->FavoriteFarmers()
+                ->detach($id);
+
+        return response()->json([
+            'message' => 'Farmer removed from favorites.'
+        ]);
+    }
+
+    public function getFavoritedBy($id)
+    {
+        $favoritedBy = User::find($id)->FavoritedBy;
+
+        if($favoritedBy->count() <= 0){
+            return response()->json([
+                'message' => 'No users found.'
+            ]);
+        }
+        return response()->json($favoritedBy);
+    }
 }

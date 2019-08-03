@@ -15,197 +15,155 @@ Route::group([
 });
 
 /*
---------------------------
-ROUTES FOR PRODUCT METHODS
---------------------------
-*/
-
-//Show list of products.
-//Optional: id - to filter products per user
-Route::middleware('auth:api')->get('/products/{id?}', [
-	'as' => 'products-list', 
-	'uses' => 'FarmerProductController@index'
-]);
-
-//Show product detail
-//Required: id - product id
-Route::middleware('auth:api')->get('/product/{id}', [
-	'as' => 'product-show',
-	'uses' => 'FarmerProductController@show'
-]);
-
-//Add product
-Route::middleware('auth:api')->post('/product/add', [
-	'as' => 'product-add',
-	'uses' => 'FarmerProductController@store'
-]);
-
-//Update product
-//Required: id - product id
-Route::middleware('auth:api')->patch('/product/update/{id}', [
-    'as' => 'product-update',
-    'uses' => 'FarmerProductController@update'
-]);
-
-//Remove product
-//Required: id - product id
-Route::middleware('auth:api')->delete('/product/remove/{id}', [
-    'as' => 'product-remove',
-    'uses' => 'FarmerProductController@destroy'
-]);
-
-
-/*
 -----------------------
 ROUTES FOR USER METHODS
 -----------------------
 */
 
 //User registration
-Route::post('/user/register', [
-	'as' => 'user-register',
-	'uses' => 'UserController@store'
-]);
+Route::post('/user/register', 'UserController@store');
 
-//Show list of users
-//Optional: type - to filter users per type (farmer or user)
-Route::middleware('auth:api')->get('/users/{type?}', [
-	'as' => 'users-list',
-	'uses' => 'UserController@index'
-]);
+Route::group([
+	'middleware' => 'auth:api'
+], function() {
+		/*
+	--------------------------
+	ROUTES FOR PRODUCT METHODS
+	--------------------------
+	*/
 
-//Show details of a user
-//Optional: id - returns detail specific user otherwise the logged-in user
-Route::middleware('auth:api')->get('/user/{id?}', [
-	'as' => 'user-show',
-	'uses' => 'UserController@show'
-]);
+	//Show list of products.
+	//Optional: id - to filter products per user
+	Route::get('/products/{id?}', 'FarmerProductController@index');
 
-//Update User Profile
-Route::middleware('auth:api')->patch('/user/update', [
-    'as' => 'user-update',
-    'uses' => 'UserController@update'
-]);
+	//Show list of products by category.
+	//Optional: id - to filter products per category
+	Route::get('/products-by-category/{id?}', 'FarmerProductController@productsByCategory');
 
-//Change password
-Route::middleware('auth:api')->patch('/user/changepass', [
-    'as' => 'user-changepass',
-    'uses' => 'UserController@changePassword',
-]);
+	//Show product categories
+	Route::get('/product/categories', 'FarmerProductCategoryController@index');
 
-Route::middleware('auth:api')->post('/shippingdetail', [
-	'as' => 'shipping-detail-add',
-	'uses' => 'UserController@storeShippingDetail'
-]);
+	//Show product detail
+	//Required: id - product id
+	Route::get('/product/{id}', 'FarmerProductController@show');
 
-Route::middleware('auth:api')->patch('/shippingdetail/{id}', [
-	'as' => 'shipping-detail-update',
-	'uses' => 'UserController@updateShippingDetail'
-]);
+	//Add product
+	Route::post('/product/add', 'FarmerProductController@store');
 
-Route::middleware('auth:api')->delete('/shippingdetail/{id}', [
-	'as' => 'shipping-detail-delete',
-	'uses' => 'UserController@destroyShippingDetail'
-]);
+	//Update product
+	//Required: id - product id
+	Route::patch('/product/update/{id}', 'FarmerProductController@update');
 
-Route::middleware('auth:api')->get('/shippingdetails', [
-	'as' => 'shipping-details-get',
-	'uses' => 'UserController@getShippingDetails'
-]);
+	//Remove product
+	//Required: id - product id
+	Route::delete('/product/remove/{id}', 'FarmerProductController@destroy');
 
-Route::middleware('auth:api')->get('/shippingdetail/{id}', [
-	'as' => 'shipping-detail-get',
-	'uses' => 'UserController@getShippingDetail'
-]);
+	//Get User Favorite Farmers
+	Route::get('/product/favorited-by/{id}', 'FarmerProductController@getFavoritedBy');
+
+	/*
+	-----------------------
+	ROUTES FOR USER METHODS
+	-----------------------
+	*/
+
+	//Show list of users
+	//Optional: type - to filter users per type (farmer or user)
+	Route::get('/users/{type?}', 'UserController@index');
+
+	//Show details of a user
+	//Optional: id - returns detail specific user otherwise the logged-in user
+	Route::get('/user/{id?}', 'UserController@show');
+
+	//Update User Profile
+	Route::patch('/user/update', 'UserController@update');
+
+	//Change password
+	Route::patch('/user/changepass', 'UserController@changePassword');
+
+	Route::post('/shippingdetail', 'UserController@storeShippingDetail');
+
+	Route::patch('/shippingdetail/{id}', 'UserController@updateShippingDetail');
+
+	Route::delete('/shippingdetail/{id}', 'UserController@destroyShippingDetail');
+
+	Route::get('/shippingdetails', 'UserController@getShippingDetails');
+
+	Route::get('/shippingdetail/{id}', 'UserController@getShippingDetail');
+
+	//Get User Favorite Products
+	Route::get('/favorite/products', 'UserController@getFavoriteProducts');
+
+	//Add User Favorite Product
+	Route::post('/favorite/product', 'UserController@addFavoriteProduct');
+
+	//Remove User Favorite Product
+	//Required: id - product id
+	Route::delete('/favorite/product/{id}', 'UserController@deleteFavoriteProduct');
+
+	//Get User Favorite Farmers
+	Route::get('/favorite/farmers', 'UserController@getFavoriteFarmers');
+
+	//Get User Favorite Farmers
+	Route::get('/user/favorited-by/{id}', 'UserController@getFavoritedBy');
+
+	//Add User Favorite Farmer
+	Route::post('/favorite/farmer/', 'UserController@addFavoriteFarmer');
+
+	//Remove User Favorite Farmer
+	//Required: id - farmer id
+	Route::delete('/favorite/farmer/{id}', 'UserController@deleteFavoriteFarmer');
 
 
-/* 
-------------------------
-ROUTES FOR ORDER METHODS
-------------------------
-*/
+	/* 
+	------------------------
+	ROUTES FOR ORDER METHODS
+	------------------------
+	*/
 
-//Initializes a new order
-Route::middleware('auth:api')->post('/order/new', [
-	'as' => 'order-new',
-	'uses' => 'OrderController@store'
-]);
+	//Initializes a new order
+	Route::post('/order/new', 'OrderController@store');
 
-//Retrieves the list of orders per user
-Route::middleware('auth:api')->get('/orders', [
-	'as' => 'orders-list', 
-	'uses' => 'OrderController@index'
-]);
+	//Retrieves the list of orders per user
+	Route::get('/orders', 'OrderController@index');
 
-//Shows details of a specific order
-//Required: id - order id
-Route::middleware('auth:api')->get('/order/{id}', [
-	'as' => 'order-show',
-	'uses' => 'OrderController@show'
-]);
+	//Shows details of a specific order
+	//Required: id - order id
+	Route::get('/order/{id}', 'OrderController@show');
 
-//Checkout specific order
-//Required: id - order id
-Route::middleware('auth:api')->patch('/order/checkout/{id}', [
-    'as' => 'order-checkout',
-    'uses' => 'OrderController@update'
-]);
+	//Checkout specific order
+	//Required: id - order id
+	Route::patch('/order/checkout/{id}', 'OrderController@update');
 
 
-/*
------------------------
-ROUTES FOR CART METHODS
------------------------
-*/
+	/*
+	-----------------------
+	ROUTES FOR CART METHODS
+	-----------------------
+	*/
 
-//Add specific product to cart
-Route::middleware('auth:api')->post('/cart/add', [
-	'as' => 'cart-add',
-	'uses' => 'ProductOrderController@store'
-]);
+	//Add specific product to cart
+	Route::post('/cart/add', 'ProductOrderController@store');
 
-//Edit product quantity
-Route::middleware('auth:api')->patch('/cart/update/{id}', [
-    'as' => 'cart-update',
-    'uses' => 'ProductOrderController@update'
-]);
+	//Edit product quantity
+	Route::patch('/cart/update/{id}', 'ProductOrderController@update');
 
-//Remove product from cart
-Route::middleware('auth:api')->delete('/cart/remove/{id}', [
-    'as' => 'cart-remove',
-    'uses' => 'ProductOrderController@destroy'
-]);
+	//Remove product from cart
+	Route::delete('/cart/remove/{id}', 'ProductOrderController@destroy');
 
-Route::get('/cart/{id}',[
-	'as' => 'cart-with-latest-status',
-	'uses' => 'ProductOrderController@showWithCurrentStatus'
-]);
+	Route::get('/cart/{id}', 'ProductOrderController@showWithCurrentStatus');
 
-//Retrieve products for dispatch
-Route::middleware('auth:api')->get('/fordispatch', [
-	'as' => 'products-fordispatch',
-	'uses' => 'ProductOrderController@displayProductsForDispatch'
-]);
+	//Retrieve products for dispatch
+	Route::get('/fordispatch', 'ProductOrderController@displayProductsForDispatch');
 
-Route::middleware('auth:api')->get('/ordersperfarmer/{status?}', [
-	'as' => 'orders-perfarmer',
-	'uses' => 'ProductOrderController@displayProductOrdersPerFarmer'
-]);
+	Route::get('/ordersperfarmer/{status?}', 'ProductOrderController@displayProductOrdersPerFarmer');
 
-//Dispatch product
-Route::middleware('auth:api')->patch('/product/dispatch/{id}', [
-	'as' => 'product-dispatch',
-	'uses' => 'ProductOrderController@dispatchProduct'
-]);
+	//Dispatch product
+	Route::patch('/product/dispatch/{id}', 'ProductOrderController@dispatchProduct');
 
-//Pack product
-Route::middleware('auth:api')->patch('/product/pack/{id}', [
-	'as' => 'product-pack',
-	'uses' => 'ProductOrderController@packProduct'
-]);
+	//Pack product
+	Route::patch('/product/pack/{id}', 'ProductOrderController@packProduct');
 
-//Cancell product
-Route::middleware('auth:api')->patch('/product/cancel/{id}', [
-	'as' => 'product-cancel',
-	'uses' => 'ProductOrderController@cancelProduct'
-]);
+	//Cancell product
+	Route::patch('/product/cancel/{id}', 'ProductOrderController@cancelProduct');
+});
